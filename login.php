@@ -16,106 +16,109 @@
 </head>
 
 <body>
-    <?php
-    include "./function/connection.php";
+<?php
+include "./function/connection.php";
 
-    session_start();
+session_start();
 
-    if (isset($_SESSION['nama'])) {
-        header('Location: index.php?halaman=beranda');
-    }
+if (isset($_SESSION['nama'])) {
+    header('Location: index.php?halaman=beranda');
+}
 
-    try {
-        if (isset($_POST['login'])) {
-            $username = htmlspecialchars($_POST['username']);
-            $password = htmlspecialchars($_POST['password']);
-        
-            // Query untuk mengecek user
-            $cekUser = mysqli_query($connection, "SELECT * FROM user WHERE username = '$username'");
-            $data = mysqli_fetch_assoc($cekUser);
-        
-            if ($cekUser->num_rows > 0) {
-                if (password_verify($password, $data['password'])) {
-                    // Set session umum
-                    $_SESSION['nama'] = $data['nama'];
-                    $_SESSION['role'] = $data['role'];
-                    $_SESSION["timeout"] = time() + (24 * 60 * 60);
-        
-                    // Cek jika role adalah dokter, tambahkan session id dokter
-                    if ($data['role'] === 'dokter') {
-                        $userId = $data['id']; // Ambil user_id dari tabel user
-                        $cekDokter = mysqli_query($connection, "SELECT id FROM dokter WHERE user_id = '$userId'");
-                        $dokterData = mysqli_fetch_assoc($cekDokter);
-        
-                        if ($cekDokter->num_rows > 0) {
-                            $_SESSION['id_dokter'] = $dokterData['id'];
-                        }
-                    }
-        
-                    echo "
-                    <script>
-                    Swal.fire({
-                        title: 'Berhasil',
-                        text: 'Berhasil Login!',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        timerProgressBar: true,
-                    }).then(() => {
-                        window.location.href = 'index.php?halaman=beranda';
-                    })
-                    </script>
-                    ";
-                } else {
-                    echo "
-                    <script>
-                    Swal.fire({
-                        title: 'Gagal',
-                        text: 'Username / password yang anda masukkan salah!',
-                        icon: 'error',
-                        showConfirmButton: true,
-                        timer: 2000,
-                        timerProgressBar: true,
-                    }).then(() => {
-                        window.location.href = 'login.php';
-                    })
-                    </script>
-                    ";
+try {
+    if (isset($_POST['login'])) {
+        $username = htmlspecialchars($_POST['username']);
+        $password = htmlspecialchars($_POST['password']);
+    
+        // Query untuk mengecek user
+        $cekUser = mysqli_query($connection, "SELECT * FROM user WHERE username = '$username'");
+        $data = mysqli_fetch_assoc($cekUser);
+    
+        if ($cekUser->num_rows > 0) {
+            if (password_verify($password, $data['password'])) {
+                // Set session umum
+                $_SESSION['nama'] = $data['nama'];
+                $_SESSION['role'] = $data['role'];
+                $_SESSION['id'] = $data['id'];
+                $_SESSION["timeout"] = time() + (24 * 60 * 60);
+    
+                // Cek jika role adalah dokter, tambahkan session id dokter
+                if ($data['role'] === 'Dokter') {
+                    $userId = $data['id']; // Ambil user_id dari tabel user
+                    $cekDokter = mysqli_query($connection, "SELECT * FROM dokter WHERE user_id = '$userId'");
+                    $dokterData = mysqli_fetch_assoc($cekDokter);
+                    $_SESSION['id_dokter'] = $dokterData['id']; // Menyimpan id_dokter dalam session
+                }elseif ($data['role'] === 'Pasien') {
+                    $userId = $data['id']; // Ambil user_id dari tabel user
+                    $cekPasien = mysqli_query($connection, "SELECT * FROM pasien WHERE user_id = '$userId'");
+                    $pasienData = mysqli_fetch_assoc($cekPasien);
+                    $_SESSION['id_pasien'] = $pasienData['id']; // Menyimpan id_dokter dalam session
                 }
+                echo "
+                <script>
+                Swal.fire({
+                    title: 'Berhasil',
+                    text: 'Berhasil Login!',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                }).then(() => {
+                    window.location.href = 'index.php?halaman=beranda';
+                })
+                </script>
+                ";
             } else {
                 echo "
                 <script>
                 Swal.fire({
                     title: 'Gagal',
-                    text: 'Akun yang anda masukkan tidak ada!',
+                    text: 'Username / password yang anda masukkan salah!',
                     icon: 'error',
-                    showConfirmButton: false,
+                    showConfirmButton: true,
                     timer: 2000,
                     timerProgressBar: true,
                 }).then(() => {
-                    window.location.href = 'index.php?halaman=login';
+                    window.location.href = 'login.php';
                 })
                 </script>
                 ";
             }
-        }        
-    } catch (\Throwable $th) {
-        echo "
+        } else {
+            echo "
             <script>
             Swal.fire({
                 title: 'Gagal',
-                text: 'Server error!',
+                text: 'Akun yang anda masukkan tidak ada!',
                 icon: 'error',
                 showConfirmButton: false,
                 timer: 2000,
                 timerProgressBar: true,
             }).then(() => {
-                window.location.href = 'login.php';
+                window.location.href = 'index.php?halaman=login';
             })
             </script>
             ";
-    }
-    ?>
+        }
+    }        
+} catch (\Throwable $th) {
+    echo "
+        <script>
+        Swal.fire({
+            title: 'Gagal',
+            text: 'Server error!',
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+        }).then(() => {
+            window.location.href = 'login.php';
+        })
+        </script>
+        ";
+}
+?>
+
     <script src="assets/static/js/initTheme.js"></script>
     <div id="auth">
         <div class="row h-100">

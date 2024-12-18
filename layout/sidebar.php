@@ -42,23 +42,50 @@ if (isset($_GET['halaman'])) {
         case 'tambah_pasien':
             $tambah_pasien = true;
             break;
+        case 'periksa_pasien':
+            $ubah_periksa = true;
+            break;
+        case 'ubah__jadwal_periksa':
+            $ubah_jadwal_periksa = true;
+            break;
+        case 'tambah_jadwal_periksa':
+            $tambah_jadwal_periksa = true;
+            break;
+        case 'tambah_daftar':
+            $tambah_daftar = true;
+            break;
         case 'ubah_dokter':
             $ubah_dokter = true;
             break;
          case 'ubah_data_dokter':
             $ubah_data_dokter = true;
             break;
-        case 'ubah_dat_password':
+        case 'ubah_data_password':
             $ubah_dokter = true;
             break;
         case 'pasien':
             $pasien = true;
+            break;
+        case 'periksa':
+            $periksa = true;
+            break;
+        case 'jadwal_periksa':
+            $jadwal_periksa = true;
+            break;
+        case 'daftar':
+            $daftar = true;
             break;
         case 'poli':
             $poli = true;
             break;
         case 'obat':
             $obat = true;
+            break;
+        case 'riwayat':
+            $riwayat = true;
+            break;
+        case 'detail_riwayat':
+            $detail_riwayat = true;
             break;
         default:
             $beranda = false;
@@ -131,6 +158,25 @@ if (isset($_GET['halaman'])) {
                                 <span>Ubah Data</span>
                             </a>
                         </li>
+                        <li class="sidebar-item <?= $jadwal_periksa || $tambah_jadwal_periksa || $ubah_jadwal_periksa ? 'active' : '' ?>">
+                            <a href="index.php?halaman=jadwal_periksa" class="sidebar-link">
+                                <i class="bi bi-calendar-check"></i>
+                                <span>Jadwal Periksa</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-title">Data</li>
+                        <li class="sidebar-item <?= $periksa || $ubah_periksa ? 'active' : '' ?>">
+                            <a href="index.php?halaman=periksa" class="sidebar-link">
+                                <i class="bi bi-file-earmark-medical"></i>
+                                <span>Periksa</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item <?= $riwayat || $detail_riwayat ? 'active' : '' ?>">
+                            <a href="index.php?halaman=riwayat" class="sidebar-link">
+                                <i class="bi bi-archive"></i>
+                                <span>Riwayat</span>
+                            </a>
+                        </li>
                     <?php elseif ($role == 'Admin') : ?>
                         <!-- Jika bukan dokter, tampilkan menu lainnya -->
                         <li class="sidebar-title">Data</li>
@@ -161,8 +207,8 @@ if (isset($_GET['halaman'])) {
                         <?php elseif ($role == 'Pasien') : ?>
                         <!-- Jika bukan dokter, tampilkan menu lainnya -->
                         <li class="sidebar-title">Data</li>
-                        <li class="sidebar-item <?= $daftar || $tambah_daftar || $ubah_dokter ? 'active' : '' ?>">
-                            <a href="index.php?halaman=dokter" class="sidebar-link">
+                        <li class="sidebar-item <?= $daftar || $tambah_daftar ? 'active' : '' ?>">
+                            <a href="index.php?halaman=daftar" class="sidebar-link">
                                 <i class="bi bi-bag-plus-fill"></i>
                                 <span>Daftar</span>
                             </a>

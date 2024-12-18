@@ -51,8 +51,23 @@ if (isset($_GET['halaman'])) {
         case 'ubah_data':
             include "page/dokter/edit_data.php";
             break;
-        case 'ubah_pasien':
-            include "page/pasien/edit.php";
+        case 'periksa_pasien':
+            include "page/periksa/add_periksa.php";
+            break;
+        case 'tambah_jadwal_periksa':
+            include "page/jadwal_periksa/add.php";
+            break;
+        case 'ubah_jadwal_periksa':
+            include "page/jadwal_periksa/edit.php";
+            break;
+        case 'detail_periksa':
+            include "page/periksa/add_obat.php";
+            break;
+        case 'tambah_daftar':
+            include "page/daftar/add.php";
+            break;
+        case 'daftar':
+            include "page/daftar/view.php";
             break;
         case 'pasien':
             include "page/pasien/view.php";
@@ -62,6 +77,18 @@ if (isset($_GET['halaman'])) {
             break;
         case 'obat':
             include "page/obat/view.php";
+            break;
+        case 'periksa':
+            include "page/periksa/view.php";
+            break;
+        case 'jadwal_periksa':
+            include "page/jadwal_periksa/view.php";
+            break;
+        case 'riwayat':
+            include "page/riwayat/view.php";
+            break;
+        case 'detail_riwayat':
+            include "page/riwayat/detail_view.php";
             break;
         default:
             include "page/error.php";

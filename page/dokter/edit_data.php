@@ -65,7 +65,7 @@ try {
                 timer: 2000,
                 timerProgressBar: true,
             }).then(() => {
-                window.location.href = 'index.php?halaman=dokter';
+                window.location.href = 'index.php?halaman=beranda';
             })
             </script>
             ";
@@ -83,7 +83,7 @@ try {
                 timer: 2000,
                 timerProgressBar: true,
             }).then(() => {
-                window.location.href = 'index.php?halaman=dokter';
+                window.location.href = 'index.php?halaman=beranda';
             })
             </script>
             ";
@@ -100,7 +100,7 @@ try {
             timer: 2000,
             timerProgressBar: true,
         }).then(() => {
-            window.location.href = 'index.php?halaman=dokter';
+            window.location.href = 'index.php?halaman=beranda';
         })
         </script>
         ";
@@ -112,17 +112,14 @@ try {
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Data Dokter</h3>
+                <h3>Data <?= $data['nama'] ?></h3>
                 <p class="text-subtitle text-muted">
-                    Halaman Ubah Data Dokter
+                    Halaman Ubah Data <?= $data['nama'] ?>
                 </p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="index.php?halaman=dokter">Dokter</a>
-                        </li>
                         <li class="breadcrumb-item active" aria-current="page">
                             Ubah Data Dokter
                         </li>
@@ -132,7 +129,6 @@ try {
         </div>
     </div>
     <section class="section">
-        <a href="index.php?halaman=dokter" class="btn btn-primary btn-sm mb-3">Kembali</a>
         <div class="card">
             <div class="card-body">
                 <form action="" method="post">
