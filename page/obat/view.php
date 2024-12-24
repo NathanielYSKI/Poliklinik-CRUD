@@ -36,6 +36,7 @@ $query = mysqli_query($connection, "SELECT * FROM obat");
                             <tr>
                                 <th>#</th>
                                 <th>Nama</th>
+                                <th>Harga</th>
                                 <th>Kemasan</th>
                                 <th>Keterangan</th>
                                 <th>Aksi</th>
@@ -49,6 +50,7 @@ $query = mysqli_query($connection, "SELECT * FROM obat");
                                     <tr>
                                         <td><?= $i++ ?></td>
                                         <td><?= $data['nama_obat'] ?></td>
+                                        <td><?= $data['harga'] ?></td>
                                         <td><?= $data['kemasan'] ?></td>
                                         <td><?= $data['keterangan'] ?></td>
                                         <td>

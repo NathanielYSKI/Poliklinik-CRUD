@@ -60,7 +60,7 @@ try {
                     timer: 2000,
                     timerProgressBar: true,
                 }).then(() => {
-                    window.location.href = 'index.php?halaman=periksa';
+                    window.location.href = 'index.php?halaman=jadwal_periksa';
                 })
                 </script>
                 ";
@@ -79,7 +79,7 @@ try {
                     timer: 2000,
                     timerProgressBar: true,
                 }).then(() => {
-                    window.location.href = 'index.php?halaman=periksa';
+                    window.location.href = 'index.php?halaman=jadwal_periksa';
                 })
                 </script>
                 ";
@@ -97,7 +97,7 @@ try {
         timer: 2000,
         timerProgressBar: true,
     }).then(() => {
-        window.location.href = 'index.php?halaman=periksa';
+        window.location.href = 'index.php?halaman=jadwal_periksa';
     })
     </script>
     ";

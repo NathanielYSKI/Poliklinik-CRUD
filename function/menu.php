@@ -84,6 +84,9 @@ if (isset($_GET['halaman'])) {
         case 'jadwal_periksa':
             include "page/jadwal_periksa/view.php";
             break;
+        case 'ubah_periksa':
+            include "page/jadwal_periksa/edit.php";
+            break;
         case 'riwayat':
             include "page/riwayat/view.php";
             break;

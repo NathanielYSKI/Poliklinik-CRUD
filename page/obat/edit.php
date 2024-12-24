@@ -25,10 +25,11 @@ try {
         // Submit
         if (isset($_POST['submit'])) {
             $nama_obat = htmlspecialchars($_POST['nama_obat']);
+            $harga = htmlspecialchars($_POST['harga']);
             $kemasan = htmlspecialchars($_POST['kemasan']);
             $keterangan = htmlspecialchars($_POST['keterangan']);
 
-            $query = mysqli_query($connection, "UPDATE obat SET nama_obat = '$nama_obat', kemasan = '$kemasan', keterangan = '$keterangan' WHERE id = '$id'");
+            $query = mysqli_query($connection, "UPDATE obat SET nama_obat = '$nama_obat', harga = '$harga', kemasan = '$kemasan', keterangan = '$keterangan' WHERE id = '$id'");
 
             if ($query == TRUE) {
                 $message = "Berhasil mengubah data";
@@ -114,6 +115,10 @@ try {
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="nama_obat" placeholder="Masukan Nama Obat" name="nama_obat" value="<?= $data['nama_obat'] ?>" required>
                         <label for="nama_obat">Nama Kontak</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="harga" placeholder="Masukan Kemasan Obat" name="harga" value="<?= $data['harga'] ?>" required>
+                        <label for="harga">Harga</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="kemasan" placeholder="Masukan Kemasan Obat" name="kemasan" value="<?= $data['kemasan'] ?>" required>
