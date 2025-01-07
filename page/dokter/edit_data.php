@@ -11,7 +11,7 @@ try {
 
     // Ambil data dokter beserta user terkait
     $select = mysqli_query($connection, 
-        "SELECT dokter.*, user.username 
+        "SELECT dokter.*, user.username, user.foto 
          FROM dokter 
          JOIN user ON dokter.user_id = user.id 
          WHERE dokter.id = '$id'");
@@ -33,6 +33,11 @@ try {
         $id_poli = intval($_POST['id_poli']);
         $username = htmlspecialchars($_POST['username']);
 
+        // Menangani file upload foto profil
+        $fotoBaru = $_FILES['foto']['name'];
+        $fotoTmp = $_FILES['foto']['tmp_name'];
+        $fotoError = $_FILES['foto']['error'];
+
         // Mulai transaksi untuk menjaga konsistensi data
         mysqli_begin_transaction($connection);
 
@@ -43,6 +48,24 @@ try {
                 "UPDATE user SET username = '$username' WHERE id = '$userId'");
             if (!$updateUser) {
                 throw new Exception("Gagal memperbarui username di tabel user.");
+            }
+
+            // Jika ada foto baru, proses upload
+            if ($fotoError === 0) {
+                // Tentukan path penyimpanan foto baru
+                $fotoDestination = 'uploads/profiles/' . basename($fotoBaru);
+
+                // Pindahkan file ke folder tujuan
+                if (move_uploaded_file($fotoTmp, $fotoDestination)) {
+                    // Update foto di tabel user
+                    $updateFoto = mysqli_query($connection, "UPDATE user SET foto = '$fotoDestination' WHERE id = '$userId'");
+
+                    if (!$updateFoto) {
+                        throw new Exception("Gagal memperbarui foto user.");
+                    }
+                } else {
+                    throw new Exception("Gagal mengunggah foto.");
+                }
             }
 
             // Update tabel dokter
@@ -107,7 +130,6 @@ try {
 }
 ?>
 
-
 <div class="page-heading">
     <div class="page-title">
         <div class="row">
@@ -131,7 +153,7 @@ try {
     <section class="section">
         <div class="card">
             <div class="card-body">
-                <form action="" method="post">
+                <form action="" method="post" enctype="multipart/form-data">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="username" placeholder="Masukan Username Dokter" name="username" value="<?= $data['username'] ?>" required>
                         <label for="username">Username</label>
@@ -158,6 +180,11 @@ try {
                             <?php endwhile; ?>
                         </select>
                         <label for="id_poli">Poliklinik</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="foto">Foto Profil</label><br>
+                        <img src="<?= $data['foto'] ?>" alt="Foto Profil" class="img-thumbnail" width="100"><br>
+                        <input type="file" name="foto" id="foto" class="form-control mt-2">
                     </div>
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary" name="submit">Submit</button>

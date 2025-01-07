@@ -22,7 +22,7 @@ try {
             $updateStatusQuery = mysqli_query($connection, "UPDATE jadwal_periksa SET status = 'Tidak Aktif' WHERE id_dokter = '$id_dokter'");
             if (!$updateStatusQuery) {
                 throw new Exception("Gagal mengubah status jadwal lain.");
-            }
+            } 
 
             // Tambahkan jadwal baru dengan status "Aktif"
             $jadwalQuery = mysqli_query($connection, "INSERT INTO jadwal_periksa (id_dokter, hari, jam_mulai, jam_selesai, status) VALUES ('$id_dokter', '$hari', '$jam_mulai', '$jam_selesai', 'Aktif')");
@@ -43,7 +43,7 @@ try {
                 timer: 2000,
                 timerProgressBar: true,
             }).then(() => {
-                window.location.href = 'index.php?halaman=periksa';
+                window.location.href = 'index.php?halaman=jadwal_periksa';
             })
             </script>
             ";
@@ -61,7 +61,7 @@ try {
                 timer: 2000,
                 timerProgressBar: true,
             }).then(() => {
-                window.location.href = 'index.php?halaman=periksa';
+                window.location.href = 'index.php?halaman=jadwal_periksa';
             })
             </script>
             ";
@@ -79,7 +79,7 @@ try {
             timer: 2000,
             timerProgressBar: true,
         }).then(() => {
-            window.location.href = 'index.php?halaman=periksa';
+            window.location.href = 'index.php?halaman=jadwal_periksa';
         })
         </script>
         ";

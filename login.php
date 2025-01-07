@@ -40,6 +40,7 @@ try {
                 $_SESSION['nama'] = $data['nama'];
                 $_SESSION['role'] = $data['role'];
                 $_SESSION['id'] = $data['id'];
+                $_SESSION['foto'] = $data['foto'];
                 $_SESSION["timeout"] = time() + (24 * 60 * 60);
     
                 // Cek jika role adalah dokter, tambahkan session id dokter

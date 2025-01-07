@@ -2,6 +2,19 @@
 // Cek apakah pengguna sudah login dan ada session 'role'
 $role = isset($_SESSION['role']) ? $_SESSION['role'] : null;
 
+$user_name = $_SESSION['nama'];  // Nama pengguna
+$user_role = $_SESSION['role'];  // Peran pengguna
+
+// Menyandikan data untuk digunakan di URL
+$user_name_encoded = urlencode($user_name);
+$user_role_encoded = urlencode($user_role);
+
+// Nomor WhatsApp tujuan (gunakan nomor internasional)
+$whatsapp_number = "6289509466544";  // Ganti dengan nomor WhatsApp yang benar
+
+// Membuat link WhatsApp
+$whatsapp_link = "https://wa.me/$whatsapp_number?text=Halo,%20saya%20$user_name_encoded,%20saya%20adalah%20$user_role_encoded.%20Saya%20butuh%20bantuan.";
+
 $beranda = false;
 $dokter = false;
 $pasien = false;
@@ -86,6 +99,12 @@ if (isset($_GET['halaman'])) {
             break;
         case 'detail_riwayat':
             $detail_riwayat = true;
+            break;
+        case 'riwayat_pasien':
+            $riwayat_pasien = true;
+            break;
+        case 'detail_riwayat_pasien':
+            $detail_riwayat_pasien = true;
             break;
         default:
             $beranda = false;
@@ -207,14 +226,35 @@ if (isset($_GET['halaman'])) {
                         <?php elseif ($role == 'Pasien') : ?>
                         <!-- Jika bukan dokter, tampilkan menu lainnya -->
                         <li class="sidebar-title">Data</li>
-                        <li class="sidebar-item <?= $daftar || $tambah_daftar ? 'active' : '' ?>">
-                            <a href="index.php?halaman=daftar" class="sidebar-link">
-                                <i class="bi bi-bag-plus-fill"></i>
-                                <span>Daftar</span>
-                            </a>
+                            <li class="sidebar-item <?= $daftar || $tambah_daftar ? 'active' : '' ?>">
+                                <a href="index.php?halaman=daftar" class="sidebar-link">
+                                    <i class="bi bi-bag-plus-fill"></i>
+                                    <span>Daftar</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item <?= $riwayat_pasien || $detail_riwayat_pasien ? 'active' : '' ?>">
+                                <a href="index.php?halaman=riwayat_pasien" class="sidebar-link">
+                                    <i class="bi bi-archive"></i>
+                                    <span>Riwayat</span>
+                                </a>
+                            </li>
                         </li>
                     <?php endif; ?>
                 <?php endif ?>
+                <li class="sidebar-title">Call Center</li>
+                    <li class="sidebar-item">
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=support@example.com&su=Support%20Request&body=Halo,%20saya%20<?php echo $user_name_encoded; ?>,%20saya%20adalah%20<?php echo $user_role_encoded; ?>.%20Saya%20butuh%20bantuan." class="sidebar-link" target="_blank">
+                            <i class="bi bi-envelope-fill"></i>
+                            <span>Email</span>
+                        </a>
+                    </li>
+                        <li class="sidebar-item">
+                            <a href="<?php echo $whatsapp_link; ?>" class="sidebar-link" target="_blank">
+                                <i class="bi bi-whatsapp"></i>
+                                <span>WhatsApp</span>
+                            </a>
+                        </li>
+                </li>   
             </ul>
         </div>
     </div>

@@ -28,7 +28,7 @@ $query = mysqli_query($connection, "SELECT * FROM jadwal_periksa");
         </div>
     </div>
     <section class="section">
-        <a href="index.php?halaman=tambah_periksa" class="btn btn-primary btn-sm mb-3">Tambah Data</a>
+        <a href="index.php?halaman=tambah_jadwal_periksa" class="btn btn-primary btn-sm mb-3">Tambah Data</a>
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">

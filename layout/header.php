@@ -1,9 +1,10 @@
 <?php
 include "./function/connection.php";
 
-// Ambil nama dan role dari sesi
+// Ambil nama, role, dan foto dari sesi
 $nama = isset($_SESSION['nama']) ? $_SESSION['nama'] : 'Guest';
 $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'Guest';
+$fotoprofil = isset($_SESSION['foto']) ? $_SESSION['foto'] : 'uploads/profiles/1.jpg'; // Gambar default jika tidak ada foto
 ?>
 
 <header>
@@ -26,7 +27,7 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'Guest';
                             </div>
                             <div class="user-img d-flex align-items-center">
                                 <div class="avatar avatar-md">
-                                    <img src="./assets/compiled/jpg/1.jpg" />
+                                    <img src="<?= $fotoprofil ?>" alt="User Image" />
                                 </div>
                             </div>
                         </div>

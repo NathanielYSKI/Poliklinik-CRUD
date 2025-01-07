@@ -93,6 +93,12 @@ if (isset($_GET['halaman'])) {
         case 'detail_riwayat':
             include "page/riwayat/detail_view.php";
             break;
+        case 'riwayat_pasien':
+            include "page/riwayat/view_pasien.php";
+            break;
+        case 'detail_riwayat_pasien':
+            include "page/riwayat/detail_view_pasien.php";
+            break;
         default:
             include "page/error.php";
     }

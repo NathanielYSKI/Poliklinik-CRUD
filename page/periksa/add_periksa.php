@@ -22,6 +22,7 @@ try {
         $catatan = htmlspecialchars($_POST['catatan']);
         $biaya_periksa = htmlspecialchars($_POST['biaya_periksa']);
         $obat_ids = $_POST['obat_ids'] ?? []; // Obat yang dipilih
+        $obat_quantities = $_POST['obat_quantity'] ?? []; // Quantity obat yang dipilih
 
         // Validasi data wajib
         if (empty($tgl_periksa) || empty($catatan) || empty($biaya_periksa)) {
@@ -48,9 +49,10 @@ try {
             $id_periksa_baru = mysqli_insert_id($connection);
 
             // Tambahkan detail periksa (obat)
-            foreach ($obat_ids as $id_obat) {
-                $query_detail = mysqli_query($connection, "INSERT INTO detail_periksa (id_periksa, id_obat) 
-                                                        VALUES ('$id_periksa_baru', '$id_obat')");
+            foreach ($obat_ids as $index => $id_obat) {
+                $quantity = $obat_quantities[$id_obat]; // Ambil quantity obat
+                $query_detail = mysqli_query($connection, "INSERT INTO detail_periksa (id_periksa, id_obat, quantity) 
+                                                        VALUES ('$id_periksa_baru', '$id_obat', '$quantity')");
                 if (!$query_detail) {
                     throw new Exception("Gagal menambahkan detail obat ke tabel periksa.");
                 }
@@ -163,11 +165,24 @@ try {
 
                     <!-- Pilih Obat -->
                     <div class="mb-3">
-                        <label for="obat_ids">Pilih Obat</label><br>
-                        <?php while ($row = mysqli_fetch_assoc($query_obat)) { ?>
-                            <input type="checkbox" class="obat-checkbox" name="obat_ids[]" value="<?= $row['id'] ?>" 
-                                   data-nama="<?= $row['nama_obat'] ?>" data-harga="<?= $row['harga'] ?>"> <?= $row['nama_obat'] ?> (Rp <?= number_format($row['harga'], 0, ',', '.') ?>)<br>
-                        <?php } ?>
+                        <label for="obat_ids">Pilih Obat</label>
+
+                        <!-- Search Box untuk mencari nama obat -->
+                        <input type="text" id="search-obat" class="form-control mb-2" placeholder="Cari obat...">
+
+                        <!-- Daftar Obat -->
+                        <div style="max-height: 200px; overflow-y: auto; padding-left: 10px;" id="obat-list">
+                            <?php while ($row = mysqli_fetch_assoc($query_obat)) { ?>
+                                <div class="obat-item">
+                                    <input type="checkbox" class="obat-checkbox" name="obat_ids[]" value="<?= $row['id'] ?>" 
+                                        data-nama="<?= $row['nama_obat'] ?>" data-harga="<?= $row['harga'] ?>"> 
+                                    <?= $row['nama_obat'] ?> (Rp <?= number_format($row['harga'], 0, ',', '.') ?>)
+                                    
+                                    <!-- Input Quantity -->
+                                    <input type="number" class="obat-quantity" name="obat_quantity[<?= $row['id'] ?>]" value="1" min="1" style="width: 60px; display: none;">
+                                </div>
+                            <?php } ?>
+                        </div>
                     </div>
 
                     <!-- Daftar Obat yang Dipilih -->
@@ -178,9 +193,8 @@ try {
 
                     <!-- Total Harga -->
                     <div class="mb-3">
-                        <h5>Total Harga: Rp <span id="total-harga">150000</span></h5>
+                        <h5>Total Harga: Rp <span id="total-harga">150,000</span></h5>
                     </div>
-
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary" name="submit">Submit</button>
                     </div>
@@ -191,35 +205,59 @@ try {
 </div>
 
 <script>
+    // Fungsi untuk menghitung dan memperbarui total harga
+    function updateTotalHarga() {
+        const totalHargaElement = document.getElementById('total-harga');
+        let totalHarga = 0;
+        
+        // Tambahkan biaya periksa
+        const biayaPeriksa = parseInt(document.getElementById('biaya_periksa').value, 10);
+        totalHarga += biayaPeriksa;
+        
+        // Loop untuk setiap item dalam daftar obat yang dipilih
+        let selectedObat = '';
+        document.querySelectorAll('.obat-checkbox:checked').forEach(function(checkbox) {
+            const obatNama = checkbox.getAttribute('data-nama');
+            const obatHarga = parseInt(checkbox.getAttribute('data-harga'), 10);
+            const quantityInput = checkbox.closest('.obat-item').querySelector('.obat-quantity');
+            const quantity = parseInt(quantityInput.value, 10);
+
+            // Tambahkan nama obat yang dipilih ke list
+            selectedObat += `<li>${obatNama} x${quantity}</li>`;
+
+            // Tambahkan harga total (harga x quantity)
+            totalHarga += obatHarga * quantity;
+        });
+
+        // Perbarui nama obat yang dipilih
+        document.getElementById('selected-obat-list').innerHTML = selectedObat;
+
+        // Perbarui total harga yang ditampilkan
+        totalHargaElement.textContent = totalHarga.toLocaleString();
+    }
+
+    // Event listener untuk checkbox obat
     document.querySelectorAll('.obat-checkbox').forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
-            const list = document.getElementById('selected-obat-list');
-            const obatNama = this.getAttribute('data-nama');
-            const obatHarga = parseInt(this.getAttribute('data-harga'), 10);
-            const totalHargaElement = document.getElementById('total-harga');
-            
-            // Ambil total harga saat ini
-            let totalHarga = parseInt(totalHargaElement.textContent.replace(/[^0-9]/g, ''), 10);
-            
-            // Jika obat dipilih, tambahkan harga, jika tidak, kurangi harga
-            if (this.checked) {
-                const listItem = document.createElement('li');
-                listItem.textContent = obatNama;
-                list.appendChild(listItem);
-                totalHarga += obatHarga;
-            } else {
-                // Hapus obat dari daftar yang dipilih
-                const items = list.getElementsByTagName('li');
-                for (let i = 0; i < items.length; i++) {
-                    if (items[i].textContent === obatNama) {
-                        list.removeChild(items[i]);
-                    }
-                }
-                totalHarga -= obatHarga;
-            }
+            // Tampilkan input quantity ketika checkbox dipilih
+            const quantityInput = checkbox.closest('.obat-item').querySelector('.obat-quantity');
+            quantityInput.style.display = checkbox.checked ? 'inline' : 'none';
 
-            // Perbarui total harga
-            totalHargaElement.textContent = totalHarga.toLocaleString();
+            updateTotalHarga();
+        });
+    });
+
+    // Event listener untuk input quantity
+    document.querySelectorAll('.obat-quantity').forEach(function(input) {
+        input.addEventListener('input', updateTotalHarga);
+    });
+
+    // Event listener untuk search box
+    document.getElementById('search-obat').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        document.querySelectorAll('.obat-item').forEach(function(item) {
+            const itemName = item.querySelector('label').textContent.toLowerCase();
+            item.style.display = itemName.includes(searchTerm) ? 'block' : 'none';
         });
     });
 </script>

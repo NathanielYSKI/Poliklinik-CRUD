@@ -30,7 +30,8 @@
     $lastIdRow = mysqli_fetch_assoc($lastIdResult);
     $lastId = $lastIdRow['last_id'] ? $lastIdRow['last_id'] + 1 : 1;
 
-    $rm = date("YmdH") . str_pad($lastId, 4, "0", STR_PAD_LEFT);
+    $rm = date("Ym") . str_pad($lastId, 4, "0", STR_PAD_LEFT);
+
 
     try {
         if (isset($_POST['register'])) {
@@ -42,15 +43,46 @@
             $no_hp = htmlspecialchars($_POST['no_hp']);
             $no_rm = htmlspecialchars($_POST['no_rm']);
 
+            // Menangani file foto profil
+            $fotoProfil = $_FILES['foto_profil'];
+            $fotoNama = $fotoProfil['name'];
+            $fotoTmpName = $fotoProfil['tmp_name'];
+            $fotoSize = $fotoProfil['size'];
+            $fotoError = $fotoProfil['error'];
+
+            // Memeriksa apakah file foto ada dan tidak ada error
+            if ($fotoError === 0) {
+                // Menentukan nama file yang unik dan lokasi penyimpanan
+                $fotoExt = pathinfo($fotoNama, PATHINFO_EXTENSION);
+                $fotoExtLower = strtolower($fotoExt);
+                $allowedExtensions = ['jpg', 'jpeg', 'png'];
+
+                if (in_array($fotoExtLower, $allowedExtensions)) {
+                    if ($fotoSize < 5000000) { // Batas ukuran file 5MB
+                        $fotoNewName = uniqid('', true) . "." . $fotoExtLower;
+                        $fotoDestination = 'uploads/profiles/' . $fotoNewName;
+                        move_uploaded_file($fotoTmpName, $fotoDestination);
+                    } else {
+                        throw new Exception('Ukuran file terlalu besar, maksimal 5MB');
+                    }
+                } else {
+                    throw new Exception('Hanya file JPG, JPEG, dan PNG yang diperbolehkan');
+                }
+            } else {
+                throw new Exception('Gagal meng-upload foto profil');
+            }
+
+            // Meng-hash password
             $hashPassword = password_hash($password, PASSWORD_DEFAULT);
 
             // Mulai transaksi
             mysqli_begin_transaction($connection);
 
-            $queryUser = mysqli_query($connection, "INSERT INTO user VALUES (null, '$nama', '$username', '$hashPassword', 'Pasien')");
+            $queryUser = mysqli_query($connection, "INSERT INTO user VALUES (null, '$nama', '$username', '$hashPassword', 'Pasien', '$fotoDestination')");
             if ($queryUser) {
                 $user_id = mysqli_insert_id($connection);
-                $queryPasien = mysqli_query($connection, "INSERT INTO pasien (nama, alamat, no_ktp, no_hp, no_rm, user_id) VALUES ('$nama', '$alamat', '$no_ktp', '$no_hp', '$no_rm', '$userId')");
+                $queryPasien = mysqli_query($connection, "INSERT INTO pasien (nama, alamat, no_ktp, no_hp, no_rm, user_id) 
+                                                        VALUES ('$nama', '$alamat', '$no_ktp', '$no_hp', '$no_rm', '$user_id')");
                 if ($queryPasien) {
                     mysqli_commit($connection);
                     echo "
@@ -104,7 +136,7 @@
                     <h1 class="auth-title">Daftar</h1>
                     <p class="auth-subtitle mb-5">Isi data berikut untuk melakukan regristasi.</p>
 
-                    <form action="" method="post">
+                    <form action="" method="post" enctype="multipart/form-data">
                         <div class="form-group position-relative has-icon-left mb-4">
                             <input type="text" class="form-control form-control-xl" placeholder="Nama" name="nama" required />
                             <div class="form-control-icon">
@@ -145,6 +177,12 @@
                             <input type="text" class="form-control form-control-xl" placeholder="No RM" name="no_rm" value="<?php echo $rm; ?>" required readonly />
                             <div class="form-control-icon">
                                 <i class="bi bi-hospital"></i>
+                            </div>
+                        </div>
+                        <div class="form-group position-relative mb-4">
+                            <input type="file" class="form-control form-control-xl" name="foto_profil" required />
+                            <div class="form-control-icon">
+                                <i class="bi bi-image"></i>
                             </div>
                         </div>
                         <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5" name="register">

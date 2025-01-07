@@ -16,31 +16,63 @@ try {
         $no_hp = htmlspecialchars($_POST['no_hp']);
         $id_poli = htmlspecialchars($_POST['id_poli']);
         $pass = htmlspecialchars($_POST['pass']);
-
+        
         // Enkripsi password
         $hashPassword = password_hash($pass, PASSWORD_DEFAULT);
-
+        
+        // Proses upload foto
+        $foto = $_FILES['foto'];
+        $fotoName = $foto['name'];
+        $fotoTmpName = $foto['tmp_name'];
+        $fotoSize = $foto['size'];
+        $fotoError = $foto['error'];
+        
+        // Validasi file gambar
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        $fotoExt = strtolower(pathinfo($fotoName, PATHINFO_EXTENSION));
+        
+        if ($fotoError === 0) {
+            if (in_array($fotoExt, $allowedExtensions)) {
+                if ($fotoSize < 5000000) { // Maksimal 5MB
+                    $newFotoName = uniqid('', true) . '.' . $fotoExt; // Nama file unik
+                    $fotoDestination = 'uploads/profiles/' . $newFotoName; // Perubahan di sini
+                    
+                    // Pindahkan foto ke folder
+                    move_uploaded_file($fotoTmpName, $fotoDestination);
+                } else {
+                    echo "Ukuran file terlalu besar.";
+                    exit;
+                }
+            } else {
+                echo "Format file tidak diperbolehkan.";
+                exit;
+            }
+        } else {
+            echo "Terjadi kesalahan saat meng-upload foto.";
+            exit;
+        }
+        
         // Mulai transaksi
         mysqli_begin_transaction($connection);
-
+        
         try {
             // Query untuk tabel user
-            $userQuery = mysqli_query($connection, "INSERT INTO user (username, nama, password, role) VALUES ('$username', '$nama', '$hashPassword', 'Dokter')");
-
+            $userQuery = mysqli_query($connection, "INSERT INTO user (username, nama, password, role, foto) VALUES ('$username', '$nama', '$hashPassword', 'Dokter', '$fotoDestination')");
+            
             if (!$userQuery) {
                 throw new Exception("Gagal menambahkan data ke tabel user.");
             }
-
+            
             // Dapatkan ID user yang baru ditambahkan
             $userId = mysqli_insert_id($connection);
-
-            // Query untuk tabel dokter
+            
+            // Query untuk tabel dokter dengan foto
             $dokterQuery = mysqli_query($connection, "INSERT INTO dokter (nama, alamat, no_hp, id_poli, user_id) VALUES ('$nama', '$alamat', '$no_hp', '$id_poli', '$userId')");
-
+            
             if (!$dokterQuery) {
                 throw new Exception("Gagal menambahkan data ke tabel dokter.");
             }
-
+            
             // Commit transaksi jika semua berhasil
             mysqli_commit($connection);
             $message = "Berhasil menambahkan data";
@@ -95,6 +127,7 @@ try {
         ";
 }
 ?>
+
 <div class="page-heading">
     <div class="page-title">
         <div class="row">
@@ -122,7 +155,7 @@ try {
         <a href="index.php?halaman=dokter" class="btn btn-primary btn-sm mb-3">Kembali</a>
         <div class="card">
             <div class="card-body">
-                <form action="" method="post">
+                <form action="" method="post" enctype="multipart/form-data">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="username" placeholder="Masukan Username Dokter" name="username" required>
                         <label for="username">Username</label>
@@ -143,13 +176,17 @@ try {
                         <input type="text" class="form-control" id="pass" placeholder="Masukan Password Dokter" name="pass" required>
                         <label for="pass">Password</label>
                     </div>
-                    <div class="">
+                    <div class="mb-3">
                         <select class="form-select mb-3" id="id_poli" name="id_poli" required>
                             <option value="" disabled selected>Poliklinik</option>
                             <?php while ($row = mysqli_fetch_assoc($poliQuery)) : ?>
                                 <option value="<?= $row['id'] ?>"><?= $row['nama_poli'] ?></option>
                             <?php endwhile; ?>
                         </select>
+                    </div>
+                    <!-- Input untuk foto -->
+                    <div class="mb-3">
+                        <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
                     </div>
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary" name="submit">Submit</button>
