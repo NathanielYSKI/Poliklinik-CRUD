@@ -5,7 +5,7 @@ include "./function/connection.php";
 $query = mysqli_query($connection, "
     SELECT p.id, p.nama, p.alamat, p.no_ktp, p.no_hp, p.no_rm, u.username 
     FROM pasien p
-    INNER JOIN user u ON p.user_id = u.id
+    INNER JOIN user u ON p.user_id = u.id WHERE p.status = '1'
 ");
 ?>
 <div class="page-heading">

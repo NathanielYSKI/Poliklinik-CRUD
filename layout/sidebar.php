@@ -70,11 +70,17 @@ if (isset($_GET['halaman'])) {
         case 'ubah_dokter':
             $ubah_dokter = true;
             break;
-         case 'ubah_data_dokter':
+        case 'ubah_data_dokter':
             $ubah_data_dokter = true;
             break;
-        case 'ubah_data_password':
-            $ubah_dokter = true;
+        case 'ubah_password_dokter':
+            $ubah_password_dokter = true;
+            break;
+        case 'ubah_data_pasien':
+            $ubah_data_pasien = true;
+            break;
+        case 'ubah_password_pasien':
+            $ubah_password_pasien = true;
             break;
         case 'pasien':
             $pasien = true;
@@ -171,10 +177,16 @@ if (isset($_GET['halaman'])) {
                     <?php if ($role == 'Dokter') : ?>
                         <!-- Hanya tampilkan menu dokter jika peran adalah dokter -->
                         <li class="sidebar-title">Profil</li>
-                        <li class="sidebar-item <?= $ubah_data_dokter || $ubah_data_password ? 'active' : '' ?>">
-                            <a href="index.php?halaman=ubah_data" class="sidebar-link">
+                        <li class="sidebar-item <?= $ubah_data_dokter ? 'active' : '' ?>">
+                            <a href="index.php?halaman=ubah_data_dokter" class="sidebar-link">
                                 <i class="bi bi-person-workspace"></i>
                                 <span>Ubah Data</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item <?= $ubah_password_dokter ? 'active' : '' ?>">
+                            <a href="index.php?halaman=ubah_password_dokter" class="sidebar-link">
+                                <i class="bi bi-lock"></i>
+                                <span>Ubah Password</span>
                             </a>
                         </li>
                         <li class="sidebar-item <?= $jadwal_periksa || $tambah_jadwal_periksa || $ubah_jadwal_periksa ? 'active' : '' ?>">
@@ -224,7 +236,19 @@ if (isset($_GET['halaman'])) {
                             </a>
                         </li>
                         <?php elseif ($role == 'Pasien') : ?>
-                        <!-- Jika bukan dokter, tampilkan menu lainnya -->
+                        <li class="sidebar-title">Profil</li>
+                        <li class="sidebar-item <?= $ubah_data_pasien ? 'active' : '' ?>">
+                            <a href="index.php?halaman=ubah_data_pasien" class="sidebar-link">
+                                <i class="bi bi-person-workspace"></i>
+                                <span>Ubah Data</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item <?= $ubah_password_pasien ? 'active' : '' ?>">
+                            <a href="index.php?halaman=ubah_password_pasien" class="sidebar-link">
+                                <i class="bi bi-lock"></i>
+                                <span>Ubah Password</span>
+                            </a>
+                        </li>
                         <li class="sidebar-title">Data</li>
                             <li class="sidebar-item <?= $daftar || $tambah_daftar ? 'active' : '' ?>">
                                 <a href="index.php?halaman=daftar" class="sidebar-link">

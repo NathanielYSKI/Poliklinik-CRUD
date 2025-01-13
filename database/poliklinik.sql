@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 07 Jan 2025 pada 08.47
+-- Waktu pembuatan: 13 Jan 2025 pada 06.34
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -44,7 +44,9 @@ INSERT INTO `daftar_poli` (`id`, `id_pasien`, `id_jadwal`, `keluhan`, `no_antria
 (1, 2, 1, 'hehe', 1, 1),
 (3, 2, 1, 'Sakit Kepala', 2, 1),
 (4, 2, 1, 'Sakit Kepala', 3, 1),
-(5, 2, 1, 'sakit mata', 4, 1);
+(5, 2, 1, 'sakit mata', 4, 1),
+(6, 2, 1, 'Sakit mata', 5, 1),
+(7, 2, 1, 'Mata merah', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -69,7 +71,9 @@ INSERT INTO `detail_periksa` (`id`, `id_periksa`, `id_obat`, `quantity`) VALUES
 (5, 6, 4, 0),
 (6, 7, 3, 0),
 (7, 7, 4, 0),
-(8, 9, 3, 3);
+(8, 9, 3, 3),
+(9, 10, 3, 3),
+(10, 10, 4, 3);
 
 -- --------------------------------------------------------
 
@@ -83,19 +87,20 @@ CREATE TABLE `dokter` (
   `alamat` varchar(255) NOT NULL,
   `no_hp` bigint(20) NOT NULL,
   `id_poli` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
+  `user_id` int(11) NOT NULL,
+  `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `dokter`
 --
 
-INSERT INTO `dokter` (`id`, `nama`, `alamat`, `no_hp`, `id_poli`, `user_id`) VALUES
-(8, 'Elkaf', 'Hawa', 2147483647, 1, 4),
-(9, 'Budi', 'Arjuna No 3, Semarang', 8958436389, 1, 5),
-(10, 'Eva', 'Arjuna', 2147483647, 1, 6),
-(11, 'Andi', 'Arjuna No 1, Semarang', 97867980798, 2, 17),
-(13, 'Edi', 'Hawa', 978679807967, 2, 21);
+INSERT INTO `dokter` (`id`, `nama`, `alamat`, `no_hp`, `id_poli`, `user_id`, `status`) VALUES
+(8, 'Elkaf', 'Hawa', 2147483647, 1, 4, 1),
+(9, 'Budi', 'Arjuna No 3, Semarang', 8958436389, 1, 5, 1),
+(10, 'Eva', 'Arjuna', 2147483647, 1, 6, 1),
+(11, 'Andi', 'Arjuna No 1, Semarang', 97867980798, 2, 17, 1),
+(13, 'Edi', 'Hawa', 978679807967, 2, 21, 0);
 
 -- --------------------------------------------------------
 
@@ -132,16 +137,18 @@ CREATE TABLE `obat` (
   `nama_obat` varchar(255) NOT NULL,
   `harga` int(11) NOT NULL,
   `kemasan` varchar(255) NOT NULL,
-  `keterangan` varchar(255) NOT NULL
+  `keterangan` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `obat`
 --
 
-INSERT INTO `obat` (`id`, `nama_obat`, `harga`, `kemasan`, `keterangan`) VALUES
-(3, 'Panadol', 1500, 'Strip', 'Diminum pagi dan malam'),
-(4, 'Paramex', 2000, 'Strip', 'Diminimu dua kali sehari');
+INSERT INTO `obat` (`id`, `nama_obat`, `harga`, `kemasan`, `keterangan`, `status`) VALUES
+(3, 'Panadol', 1500, 'Strip', 'Diminum pagi dan malam', 1),
+(4, 'Paramex', 2000, 'Strip', 'Diminimu dua kali sehari', 0),
+(6, 'Komix', 2000, 'Sachet', 'Obat batuk', 1);
 
 -- --------------------------------------------------------
 
@@ -156,16 +163,17 @@ CREATE TABLE `pasien` (
   `no_ktp` bigint(20) NOT NULL,
   `no_hp` bigint(20) NOT NULL,
   `no_rm` bigint(20) NOT NULL,
-  `user_id` int(11) NOT NULL
+  `user_id` int(11) NOT NULL,
+  `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `pasien`
 --
 
-INSERT INTO `pasien` (`id`, `nama`, `alamat`, `no_ktp`, `no_hp`, `no_rm`, `user_id`) VALUES
-(2, 'Ari', 'Hawa', 89673897633, 89673897633, 2147483647, 8),
-(6, 'Evan', 'Arjuna No 1, Semarang', 3374022354120001, 89509466544, 2025010003, 18);
+INSERT INTO `pasien` (`id`, `nama`, `alamat`, `no_ktp`, `no_hp`, `no_rm`, `user_id`, `status`) VALUES
+(2, 'Ari', 'Hawa', 3374022354120002, 978679807967, 2147483647, 8, 1),
+(6, 'Evan', 'Arjuna No 1, Semarang', 3374022354120001, 89509466544, 2025010003, 18, 0);
 
 -- --------------------------------------------------------
 
@@ -189,7 +197,8 @@ INSERT INTO `periksa` (`id`, `id_daftarpoli`, `tgl_periksa`, `catatan`, `biaya_p
 (5, 3, '2024-12-18', 'Istirahat yang cukup', 150000),
 (6, 1, '2024-12-24', 'Istirahat', 150000),
 (7, 4, '2024-12-24', 'Istirahat', 150000),
-(9, 5, '2025-01-07', 'istirahat', 150000);
+(9, 5, '2025-01-07', 'istirahat', 150000),
+(10, 6, '2025-01-07', 'istirahat', 150000);
 
 -- --------------------------------------------------------
 
@@ -200,16 +209,18 @@ INSERT INTO `periksa` (`id`, `id_daftarpoli`, `tgl_periksa`, `catatan`, `biaya_p
 CREATE TABLE `poli` (
   `id` int(11) NOT NULL,
   `nama_poli` varchar(255) NOT NULL,
-  `keterangan` varchar(255) NOT NULL
+  `keterangan` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `poli`
 --
 
-INSERT INTO `poli` (`id`, `nama_poli`, `keterangan`) VALUES
-(1, 'Poli Mata', 'Buka jam 08:00-12:00'),
-(2, 'Poli Telinga', 'Buka jam 08:00-11:30');
+INSERT INTO `poli` (`id`, `nama_poli`, `keterangan`, `status`) VALUES
+(1, 'Poli Mata', 'Buka jam 08:00-12:00', 1),
+(2, 'Poli Telinga', 'Buka jam 08:00-11:00', 1),
+(3, 'Poli Mulut', 'Buka jam 08:00-12:00', 0);
 
 -- --------------------------------------------------------
 
@@ -223,22 +234,23 @@ CREATE TABLE `user` (
   `username` varchar(25) NOT NULL,
   `password` varchar(150) NOT NULL,
   `role` varchar(10) NOT NULL,
-  `foto` varchar(255) NOT NULL
+  `foto` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `user`
 --
 
-INSERT INTO `user` (`id`, `nama`, `username`, `password`, `role`, `foto`) VALUES
-(1, 'Nathan', 'Nathan', '$2y$10$.G90gSPwhsKHD1DpN0pHw.ftOubnFF.hx9OpElruLdLKHG.vnq7iy', 'Admin', 'uploads/profiles/1.jpg'),
-(4, 'Elkaf', 'Elkaf', '$2y$10$oczl3oKjnNbhGJOuX1CA.OIQBY6UNYQ9Yuxu0frwVnTM1c5XdgjxK', 'Dokter', 'uploads/profiles/4.jpg'),
-(5, 'Budi', 'Budi', '$2y$10$1rfR9P4odKJcHouQzFTlku.qP8DkionYRBJhMRCnf8bZBC4u9JTdW', 'Dokter', 'uploads/profiles/2.jpg'),
-(6, 'Eva', 'Eva', '$2y$10$QDZ43cMDdZ9lJvBkle1.4O79tURtZ1L5SKIoPTCPLPifbyveOxn7m', 'Dokter', 'uploads/profiles/1.jpg'),
-(8, 'Ari', 'Ari', '$2y$10$ZB8K6taBFEd1cKA8E4McWuMkCbDtAn2cmKxBMBJaA7Mhsgsv48BBS', 'Pasien', 'uploads/profiles/1.jpg'),
-(17, 'Andi', 'Andi', '$2y$10$rOKEwqUeljm5DvF7QmfLkOQ2CZz.947NGt1mBlZ5d/xehYUhBh5Lq', 'Dokter', 'uploads/profiles/1.jpg'),
-(18, 'Evan', 'evan', '$2y$10$0BYgt93JR10wqIXa6qrT8ua61oBZot6N7amYbiczvckG.GAaS0he2', 'Pasien', 'uploads/profiles/677cd41377fcd4.13482439.png'),
-(21, 'Edi', 'edi', '$2y$10$6P6fkMtwvQ3dNr/sWMMQl.D8ZTjusVltV6fRML.HRaqvm3sf.1bSS', 'Dokter', 'uploads/profiles/677cdac135f8b4.52363749.jpg');
+INSERT INTO `user` (`id`, `nama`, `username`, `password`, `role`, `foto`, `status`) VALUES
+(1, 'Nathan', 'Nathan', '$2y$10$.G90gSPwhsKHD1DpN0pHw.ftOubnFF.hx9OpElruLdLKHG.vnq7iy', 'Admin', 'uploads/profiles/1.jpg', 1),
+(4, 'Elkaf', 'Elkaf', '$2y$10$oczl3oKjnNbhGJOuX1CA.OIQBY6UNYQ9Yuxu0frwVnTM1c5XdgjxK', 'Dokter', 'uploads/profiles/4.jpg', 1),
+(5, 'Budi', 'Budi', '$2y$10$uSW.QY2wRsS3I4LeFE0CLeifHCtLwaXNAwOGZujLA6vUsmjTcRwg.', 'Dokter', 'uploads/profiles/2.jpg', 1),
+(6, 'Eva', 'Eva', '$2y$10$QDZ43cMDdZ9lJvBkle1.4O79tURtZ1L5SKIoPTCPLPifbyveOxn7m', 'Dokter', 'uploads/profiles/1.jpg', 1),
+(8, 'Ari', 'Ari', '$2y$10$8hz/9FpydQHgGfWcEjCTgeADJIMoiqHynKR6orIsMFgKbNBN6/6yO', 'Pasien', 'uploads/profiles/1.jpg', 1),
+(17, 'Andi', 'Andi', '$2y$10$rOKEwqUeljm5DvF7QmfLkOQ2CZz.947NGt1mBlZ5d/xehYUhBh5Lq', 'Dokter', 'uploads/profiles/1.jpg', 1),
+(18, 'Evan', 'evan', '$2y$10$0BYgt93JR10wqIXa6qrT8ua61oBZot6N7amYbiczvckG.GAaS0he2', 'Pasien', 'uploads/profiles/677cd41377fcd4.13482439.png', 0),
+(21, 'Edi', 'edi', '$2y$10$6P6fkMtwvQ3dNr/sWMMQl.D8ZTjusVltV6fRML.HRaqvm3sf.1bSS', 'Dokter', 'uploads/profiles/677cdac135f8b4.52363749.jpg', 0);
 
 --
 -- Indexes for dumped tables
@@ -316,13 +328,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT untuk tabel `daftar_poli`
 --
 ALTER TABLE `daftar_poli`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `detail_periksa`
 --
 ALTER TABLE `detail_periksa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT untuk tabel `dokter`
@@ -340,7 +352,7 @@ ALTER TABLE `jadwal_periksa`
 -- AUTO_INCREMENT untuk tabel `obat`
 --
 ALTER TABLE `obat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `pasien`
@@ -352,13 +364,13 @@ ALTER TABLE `pasien`
 -- AUTO_INCREMENT untuk tabel `periksa`
 --
 ALTER TABLE `periksa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT untuk tabel `poli`
 --
 ALTER TABLE `poli`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `user`

@@ -28,14 +28,14 @@ try {
         try {
             // Hapus data dokter
             $deleteDokter = mysqli_query($connection, 
-                "DELETE FROM dokter WHERE id = '$id'");
+                "UPDATE dokter SET status = '0' WHERE id = '$id'");
             if (!$deleteDokter) {
                 throw new Exception("Gagal menghapus data dokter.");
             }
 
             // Hapus data user
             $deleteUser = mysqli_query($connection, 
-                "DELETE FROM user WHERE id = '$userId'");
+                "UPDATE user SET status='0' WHERE id = '$userId'");
             if (!$deleteUser) {
                 throw new Exception("Gagal menghapus data user.");
             }

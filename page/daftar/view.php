@@ -47,7 +47,7 @@ $jadwalQuery = mysqli_query($connection, "SELECT id, hari, jam_mulai, jam_selesa
                             SELECT dp.no_antrian, jp.hari, jp.jam_mulai, jp.jam_selesai, dp.keluhan
                             FROM daftar_poli dp
                             JOIN jadwal_periksa jp ON dp.id_jadwal = jp.id
-                            WHERE jp.status = 'Aktif'
+                            WHERE jp.status = 'Aktif' AND dp.status = '0'
                         ");
                         $counter = 1;
                         while ($data = mysqli_fetch_assoc($periksaQuery)) :

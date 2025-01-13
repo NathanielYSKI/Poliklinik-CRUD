@@ -1,7 +1,7 @@
 <?php
 include "./function/connection.php";
 
-$query = mysqli_query($connection, "SELECT * FROM poli");
+$query = mysqli_query($connection, "SELECT * FROM poli WHERE status = '1'");
 ?>
 <div class="page-heading">
     <div class="page-title">

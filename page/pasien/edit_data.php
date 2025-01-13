@@ -6,31 +6,28 @@ try {
     $success = FALSE;
     $error = FALSE;
 
-    // Ambil `id_dokter` dari session
-    $id = $_SESSION['id_dokter'];
+    // Ambil `id_pasien` dari session
+    $id = $_SESSION['id_pasien'];
 
     // Ambil data dokter beserta user terkait
     $select = mysqli_query($connection, 
-        "SELECT dokter.*, user.username, user.foto 
-         FROM dokter 
-         JOIN user ON dokter.user_id = user.id 
-         WHERE dokter.id = '$id'");
+        "SELECT pasien.*, user.username, user.foto 
+         FROM pasien 
+         JOIN user ON pasien.user_id = user.id 
+         WHERE pasien.id = '$id'");
     $data = mysqli_fetch_assoc($select);
 
     if (!$data) {
-        header('Location: index.php?halaman=dokter');
+        header('Location: index.php?halaman=pasien');
         exit();
     }
-
-    // Ambil data poliklinik untuk dropdown
-    $poliQuery = mysqli_query($connection, "SELECT id, nama_poli FROM poli WHERE status = '1'");
 
     // Submit
     if (isset($_POST['submit'])) {
         $nama = htmlspecialchars($_POST['nama']);
         $alamat = htmlspecialchars($_POST['alamat']);
         $no_hp = intval($_POST['no_hp']);
-        $id_poli = intval($_POST['id_poli']);
+        $no_ktp = intval($_POST['no_ktp']);
         $username = htmlspecialchars($_POST['username']);
 
         // Menangani file upload foto profil
@@ -68,11 +65,11 @@ try {
                 }
             }
 
-            // Update tabel dokter
-            $updateDokter = mysqli_query($connection, 
-                "UPDATE dokter SET nama = '$nama', alamat = '$alamat', no_hp = '$no_hp', id_poli = '$id_poli' WHERE id = '$id'");
-            if (!$updateDokter) {
-                throw new Exception("Gagal memperbarui data dokter.");
+            // Update tabel pasien
+            $updatePasien = mysqli_query($connection, 
+                "UPDATE pasien SET nama = '$nama', alamat = '$alamat', no_hp = '$no_hp', no_ktp = '$no_ktp' WHERE id = '$id'");
+            if (!$updatePasien) {
+                throw new Exception("Gagal memperbarui data pasien.");
             }
 
             // Commit transaksi jika semua berhasil
@@ -155,31 +152,24 @@ try {
             <div class="card-body">
                 <form action="" method="post" enctype="multipart/form-data">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="username" placeholder="Masukan Username Dokter" name="username" value="<?= $data['username'] ?>" required>
+                        <input type="text" class="form-control" id="username" placeholder="Masukan Username Pasien" name="username" value="<?= $data['username'] ?>" required>
                         <label for="username">Username</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="nama" placeholder="Masukan Nama Dokter" name="nama" value="<?= $data['nama'] ?>" required>
+                        <input type="text" class="form-control" id="nama" placeholder="Masukan Nama Pasien" name="nama" value="<?= $data['nama'] ?>" required>
                         <label for="nama">Nama Dokter</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="alamat" placeholder="Masukan Alamat Dokter" name="alamat" value="<?= $data['alamat'] ?>" required>
+                        <input type="text" class="form-control" id="alamat" placeholder="Masukan Alamat Pasien" name="alamat" value="<?= $data['alamat'] ?>" required>
                         <label for="alamat">Alamat</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="no_hp" placeholder="Masukan Nomor Handphone Dokter" name="no_hp" value="<?= $data['no_hp'] ?>" required>
+                        <input type="number" class="form-control" id="no_hp" placeholder="Masukan Nomor Handphone Pasien" name="no_hp" value="<?= $data['no_hp'] ?>" required>
                         <label for="no_hp">Nomor Handphone</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <select class="form-select" id="id_poli" name="id_poli" required>
-                            <option value="" disabled>Pilih Poliklinik</option>
-                            <?php while ($row = mysqli_fetch_assoc($poliQuery)) : ?>
-                                <option value="<?= $row['id'] ?>" <?= $data['id_poli'] == $row['id'] ? 'selected' : '' ?>>
-                                    <?= $row['nama_poli'] ?>
-                                </option>
-                            <?php endwhile; ?>
-                        </select>
-                        <label for="id_poli">Poliklinik</label>
+                        <input type="number" class="form-control" id="no_hp" placeholder="Masukan Nomor KTP Pasien" name="no_ktp" value="<?= $data['no_hp'] ?>" required>
+                        <label for="no_ktp">Nomor KTP</label>
                     </div>
                     <div class="mb-3">
                         <label for="foto">Foto Profil</label><br>

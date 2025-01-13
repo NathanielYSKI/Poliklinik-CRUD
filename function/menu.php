@@ -48,8 +48,17 @@ if (isset($_GET['halaman'])) {
         case 'hapus_pasien':
             include "page/pasien/delete.php";
             break;
-        case 'ubah_data':
+        case 'ubah_data_dokter':
             include "page/dokter/edit_data.php";
+            break;
+        case 'ubah_password_dokter':
+            include "page/dokter/edit_data_password.php";
+            break;
+        case 'ubah_data_pasien':
+            include "page/pasien/edit_data.php";
+            break;
+        case 'ubah_password_pasien':
+            include "page/pasien/edit_data_password.php";
             break;
         case 'periksa_pasien':
             include "page/periksa/add_periksa.php";

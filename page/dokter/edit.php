@@ -27,7 +27,7 @@ try {
         }
 
         // Ambil data poliklinik untuk dropdown
-        $poliQuery = mysqli_query($connection, "SELECT id, nama_poli FROM poli");
+        $poliQuery = mysqli_query($connection, "SELECT id, nama_poli FROM poli WHERE status = '1'");
 
         // Submit
         if (isset($_POST['submit'])) {

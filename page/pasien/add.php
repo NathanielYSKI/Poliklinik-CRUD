@@ -45,7 +45,7 @@ try {
             $userId = mysqli_insert_id($connection);
 
             // Query untuk tabel pasien
-            $pasienQuery = mysqli_query($connection, "INSERT INTO pasien (nama, alamat, no_ktp, no_hp, no_rm, user_id) VALUES ('$nama', '$alamat', '$no_ktp', '$no_hp', '$no_rm', '$userId')");
+            $pasienQuery = mysqli_query($connection, "INSERT INTO pasien (nama, alamat, no_ktp, no_hp, no_rm, user_id, status) VALUES ('$nama', '$alamat', '$no_ktp', '$no_hp', '$no_rm', '$userId', '1')");
 
             if (!$pasienQuery) {
                 throw new Exception("Gagal menambahkan data ke tabel pasien.");

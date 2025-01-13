@@ -17,7 +17,7 @@ try {
             header('Location: index.php?halaman=obat');
         }
 
-        $query = mysqli_query($connection, "DELETE FROM obat WHERE id = '$id'");
+        $query = mysqli_query($connection, "UPDATE obat SET status = '0' WHERE id = '$id'");
 
         if ($query == TRUE) {
             $message = "Berhasil menghapus data";

@@ -1,7 +1,7 @@
 <?php
 include "./function/connection.php";
 
-$query = mysqli_query($connection, "SELECT * FROM obat");
+$query = mysqli_query($connection, "SELECT * FROM obat WHERE status = '1'");
 ?>
 <div class="page-heading">
     <div class="page-title">

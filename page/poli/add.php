@@ -10,7 +10,7 @@ try {
         $nama = htmlspecialchars($_POST['nama']);
         $keterangan = htmlspecialchars($_POST['keterangan']);
 
-        $query = mysqli_query($connection, "INSERT INTO poli VALUES (null, '$nama', '$keterangan')");
+        $query = mysqli_query($connection, "INSERT INTO poli VALUES (null, '$nama', '$keterangan', '1')");
 
         if ($query == TRUE) {
             $message = "Berhasil menambahkan data";

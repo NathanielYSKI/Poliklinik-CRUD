@@ -12,7 +12,7 @@ try {
         $kemasan = htmlspecialchars($_POST['kemasan']);
         $keterangan = htmlspecialchars($_POST['keterangan']);
 
-        $query = mysqli_query($connection, "INSERT INTO obat VALUES (null, '$nama_obat','$harga', '$kemasan', '$keterangan')");
+        $query = mysqli_query($connection, "INSERT INTO obat VALUES (null, '$nama_obat','$harga', '$kemasan', '$keterangan', '1')");
 
         if ($query == TRUE) {
             $message = "Berhasil menambahkan data";

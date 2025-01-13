@@ -1,11 +1,13 @@
 <?php
 include "./function/connection.php"; // Koneksi ke database
 
-// Query untuk mendapatkan data Poliklinik dan Dokter
+// Query untuk mendapatkan data Poliklinik dan Dokter yang memiliki jadwal aktif
 $poliDokterQuery = mysqli_query($connection, "
-    SELECT p.id AS id_poli, p.nama_poli, d.id AS id_dokter, d.nama AS nama_dokter
+    SELECT DISTINCT p.id AS id_poli, p.nama_poli, d.id AS id_dokter, d.nama AS nama_dokter
     FROM poli p
     JOIN dokter d ON p.id = d.id_poli
+    JOIN jadwal_periksa j ON d.id = j.id_dokter
+    WHERE j.status = 'Aktif'
 ");
 
 // Query untuk mendapatkan semua jadwal
@@ -40,7 +42,7 @@ if (isset($_POST['submit'])) {
         // Ambil nomor antrian terakhir untuk jadwal yang sama
         $antrianQuery = mysqli_query(
             $connection,
-            "SELECT MAX(no_antrian) AS max_antrian FROM daftar_poli WHERE id_jadwal = '$id_jadwal'"
+            "SELECT MAX(no_antrian) AS max_antrian FROM daftar_poli WHERE id_jadwal = '$id_jadwal' AND status = '0'"
         );
         $antrianData = mysqli_fetch_assoc($antrianQuery);
         $no_antrian = $antrianData['max_antrian'] ? $antrianData['max_antrian'] + 1 : 1;

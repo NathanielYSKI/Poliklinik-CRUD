@@ -6,7 +6,7 @@ $query = mysqli_query($connection, "
     SELECT d.id, d.nama, d.alamat, d.no_hp, p.nama_poli, u.username 
     FROM dokter d
     INNER JOIN poli p ON d.id_poli = p.id
-    INNER JOIN user u ON d.user_id = u.id
+    INNER JOIN user u ON d.user_id = u.id WHERE d.status = 1
 ");
 ?>
 <div class="page-heading">

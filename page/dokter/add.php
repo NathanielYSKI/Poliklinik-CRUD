@@ -67,7 +67,7 @@ try {
             $userId = mysqli_insert_id($connection);
             
             // Query untuk tabel dokter dengan foto
-            $dokterQuery = mysqli_query($connection, "INSERT INTO dokter (nama, alamat, no_hp, id_poli, user_id) VALUES ('$nama', '$alamat', '$no_hp', '$id_poli', '$userId')");
+            $dokterQuery = mysqli_query($connection, "INSERT INTO dokter (nama, alamat, no_hp, id_poli, user_id, status) VALUES ('$nama', '$alamat', '$no_hp', '$id_poli', '$userId', '1')");
             
             if (!$dokterQuery) {
                 throw new Exception("Gagal menambahkan data ke tabel dokter.");
