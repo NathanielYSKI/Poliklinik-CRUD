@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 13 Jan 2025 pada 06.34
+-- Waktu pembuatan: 16 Jan 2025 pada 10.03
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -85,7 +85,7 @@ CREATE TABLE `dokter` (
   `id` int(11) NOT NULL,
   `nama` varchar(255) NOT NULL,
   `alamat` varchar(255) NOT NULL,
-  `no_hp` bigint(20) NOT NULL,
+  `no_hp` varchar(20) NOT NULL,
   `id_poli` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `status` int(11) NOT NULL
@@ -96,11 +96,11 @@ CREATE TABLE `dokter` (
 --
 
 INSERT INTO `dokter` (`id`, `nama`, `alamat`, `no_hp`, `id_poli`, `user_id`, `status`) VALUES
-(8, 'Elkaf', 'Hawa', 2147483647, 1, 4, 1),
-(9, 'Budi', 'Arjuna No 3, Semarang', 8958436389, 1, 5, 1),
-(10, 'Eva', 'Arjuna', 2147483647, 1, 6, 1),
-(11, 'Andi', 'Arjuna No 1, Semarang', 97867980798, 2, 17, 1),
-(13, 'Edi', 'Hawa', 978679807967, 2, 21, 0);
+(8, 'Elkaf', 'Hawa', '089567436455', 1, 4, 1),
+(9, 'Budi', 'Arjuna No 3, Semarang', '08958436389', 1, 5, 1),
+(10, 'Eva', 'Arjuna', '081974563422', 1, 6, 1),
+(11, 'Andi', 'Arjuna No 1, Semarang', '08164587821', 2, 17, 1),
+(13, 'Edi', 'Hawa', '978679807967', 2, 21, 0);
 
 -- --------------------------------------------------------
 
@@ -161,7 +161,7 @@ CREATE TABLE `pasien` (
   `nama` varchar(255) NOT NULL,
   `alamat` varchar(255) NOT NULL,
   `no_ktp` bigint(20) NOT NULL,
-  `no_hp` bigint(20) NOT NULL,
+  `no_hp` varchar(20) NOT NULL,
   `no_rm` bigint(20) NOT NULL,
   `user_id` int(11) NOT NULL,
   `status` int(11) NOT NULL
@@ -172,8 +172,8 @@ CREATE TABLE `pasien` (
 --
 
 INSERT INTO `pasien` (`id`, `nama`, `alamat`, `no_ktp`, `no_hp`, `no_rm`, `user_id`, `status`) VALUES
-(2, 'Ari', 'Hawa', 3374022354120002, 978679807967, 2147483647, 8, 1),
-(6, 'Evan', 'Arjuna No 1, Semarang', 3374022354120001, 89509466544, 2025010003, 18, 0);
+(2, 'Ari', 'Hawa', 3374022354120002, '081978235633', 2147483647, 8, 1),
+(6, 'Evan', 'Arjuna No 1, Semarang', 3374022354120001, '89509466544', 2025010003, 18, 0);
 
 -- --------------------------------------------------------
 
@@ -243,7 +243,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `nama`, `username`, `password`, `role`, `foto`, `status`) VALUES
-(1, 'Nathan', 'Nathan', '$2y$10$.G90gSPwhsKHD1DpN0pHw.ftOubnFF.hx9OpElruLdLKHG.vnq7iy', 'Admin', 'uploads/profiles/1.jpg', 1),
+(1, 'Nathan', 'Nathan', '$2y$10$5Kzv80J15Z/dElyjxyv2o.z0r2wVxiT2QurLwhXajy2RDtJlsiI0K', 'Admin', 'uploads/profiles/1.jpg', 1),
 (4, 'Elkaf', 'Elkaf', '$2y$10$oczl3oKjnNbhGJOuX1CA.OIQBY6UNYQ9Yuxu0frwVnTM1c5XdgjxK', 'Dokter', 'uploads/profiles/4.jpg', 1),
 (5, 'Budi', 'Budi', '$2y$10$uSW.QY2wRsS3I4LeFE0CLeifHCtLwaXNAwOGZujLA6vUsmjTcRwg.', 'Dokter', 'uploads/profiles/2.jpg', 1),
 (6, 'Eva', 'Eva', '$2y$10$QDZ43cMDdZ9lJvBkle1.4O79tURtZ1L5SKIoPTCPLPifbyveOxn7m', 'Dokter', 'uploads/profiles/1.jpg', 1),

@@ -60,6 +60,12 @@ if (isset($_GET['halaman'])) {
         case 'ubah_password_pasien':
             include "page/pasien/edit_data_password.php";
             break;
+        case 'ubah_data_admin':
+            include "page/admin/edit_data.php";
+            break;
+        case 'ubah_password_admin':
+            include "page/admin/edit_data_password.php";
+            break;
         case 'periksa_pasien':
             include "page/periksa/add_periksa.php";
             break;

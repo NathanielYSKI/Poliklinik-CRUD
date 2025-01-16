@@ -33,7 +33,7 @@ try {
         if (isset($_POST['submit'])) {
             $nama = htmlspecialchars($_POST['nama']);
             $alamat = htmlspecialchars($_POST['alamat']);
-            $no_hp = intval($_POST['no_hp']);
+            $no_hp = htmlspecialchars($_POST['no_hp']);
             $id_poli = intval($_POST['id_poli']);
             $username = htmlspecialchars($_POST['username']);
 

@@ -6,15 +6,12 @@ try {
     $success = FALSE;
     $error = FALSE;
 
-    // Ambil `id_pasien` dari session
-    $id = $_SESSION['id_pasien'];
+    // Ambil `id` dari session
+    $id = $_SESSION['id'];
 
-    // Ambil data dokter beserta user terkait
+    // Ambil data user terkait
     $select = mysqli_query($connection, 
-        "SELECT pasien.*, user.username, user.foto 
-         FROM pasien 
-         JOIN user ON pasien.user_id = user.id 
-         WHERE pasien.id = '$id'");
+        "SELECT * FROM user WHERE id = '$id'");
     $data = mysqli_fetch_assoc($select);
 
     if (!$data) {
@@ -22,12 +19,9 @@ try {
         exit();
     }
 
-    // Submit
+    // Submit form
     if (isset($_POST['submit'])) {
         $nama = htmlspecialchars($_POST['nama']);
-        $alamat = htmlspecialchars($_POST['alamat']);
-        $no_hp = htmlspecialchars($_POST['no_hp']);
-        $no_ktp = intval($_POST['no_ktp']);
         $username = htmlspecialchars($_POST['username']);
 
         // Menangani file upload foto profil
@@ -39,12 +33,11 @@ try {
         mysqli_begin_transaction($connection);
 
         try {
-            // Update tabel user
-            $userId = $data['user_id']; // Ambil ID user dari dokter
+            // Update tabel user untuk username dan nama
             $updateUser = mysqli_query($connection, 
-                "UPDATE user SET username = '$username' WHERE id = '$userId'");
+                "UPDATE user SET username = '$username', nama = '$nama' WHERE id = '$id'");
             if (!$updateUser) {
-                throw new Exception("Gagal memperbarui username di tabel user.");
+                throw new Exception("Gagal memperbarui username atau nama.");
             }
 
             // Jika ada foto baru, proses upload
@@ -55,26 +48,19 @@ try {
                 // Pindahkan file ke folder tujuan
                 if (move_uploaded_file($fotoTmp, $fotoDestination)) {
                     // Update foto di tabel user
-                    $updateFoto = mysqli_query($connection, "UPDATE user SET foto = '$fotoDestination' WHERE id = '$userId'");
+                    $updateFoto = mysqli_query($connection, "UPDATE user SET foto = '$fotoDestination' WHERE id = '$id'");
 
                     if (!$updateFoto) {
-                        throw new Exception("Gagal memperbarui foto user.");
+                        throw new Exception("Gagal memperbarui foto profil.");
                     }
                 } else {
                     throw new Exception("Gagal mengunggah foto.");
                 }
             }
 
-            // Update tabel pasien
-            $updatePasien = mysqli_query($connection, 
-                "UPDATE pasien SET nama = '$nama', alamat = '$alamat', no_hp = '$no_hp', no_ktp = '$no_ktp' WHERE id = '$id'");
-            if (!$updatePasien) {
-                throw new Exception("Gagal memperbarui data pasien.");
-            }
-
             // Commit transaksi jika semua berhasil
             mysqli_commit($connection);
-            $message = "Berhasil mengubah data";
+            $message = "Berhasil mengubah data.";
             echo "
             <script>
             Swal.fire({
@@ -133,14 +119,14 @@ try {
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Data <?= $data['nama'] ?></h3>
                 <p class="text-subtitle text-muted">
-                    Halaman Ubah Data <?= $data['nama'] ?>
+                    Halaman Ubah Data Anda
                 </p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active" aria-current="page">
-                            Ubah Data Dokter
+                            Ubah Data
                         </li>
                     </ol>
                 </nav>
@@ -152,24 +138,12 @@ try {
             <div class="card-body">
                 <form action="" method="post" enctype="multipart/form-data">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="username" placeholder="Masukan Username Pasien" name="username" value="<?= $data['username'] ?>" required>
+                        <input type="text" class="form-control" id="username" placeholder="Masukan Username" name="username" value="<?= $data['username'] ?>" required>
                         <label for="username">Username</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="nama" placeholder="Masukan Nama Pasien" name="nama" value="<?= $data['nama'] ?>" required>
-                        <label for="nama">Nama Dokter</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="alamat" placeholder="Masukan Alamat Pasien" name="alamat" value="<?= $data['alamat'] ?>" required>
-                        <label for="alamat">Alamat</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="no_hp" placeholder="Masukan Nomor Handphone Pasien" name="no_hp" value="<?= $data['no_hp'] ?>" required>
-                        <label for="no_hp">Nomor Handphone</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="no_hp" placeholder="Masukan Nomor KTP Pasien" name="no_ktp" value="<?= $data['no_hp'] ?>" required>
-                        <label for="no_ktp">Nomor KTP</label>
+                        <input type="text" class="form-control" id="nama" placeholder="Masukan Nama Anda" name="nama" value="<?= $data['nama'] ?>" required>
+                        <label for="nama">Nama</label>
                     </div>
                     <div class="mb-3">
                         <label for="foto">Foto Profil</label><br>

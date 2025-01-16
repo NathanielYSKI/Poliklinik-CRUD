@@ -82,6 +82,12 @@ if (isset($_GET['halaman'])) {
         case 'ubah_password_pasien':
             $ubah_password_pasien = true;
             break;
+        case 'ubah_data_admin':
+            $ubah_data_admin = true;
+            break;
+        case 'ubah_password_admin':
+            $ubah_password_admin = true;
+            break;
         case 'pasien':
             $pasien = true;
             break;
@@ -210,6 +216,19 @@ if (isset($_GET['halaman'])) {
                         </li>
                     <?php elseif ($role == 'Admin') : ?>
                         <!-- Jika bukan dokter, tampilkan menu lainnya -->
+                        <li class="sidebar-title">Profil</li>
+                        <li class="sidebar-item <?= $ubah_data_admin ? 'active' : '' ?>">
+                            <a href="index.php?halaman=ubah_data_admin" class="sidebar-link">
+                                <i class="bi bi-person-workspace"></i>
+                                <span>Ubah Data</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item <?= $ubah_password_admin ? 'active' : '' ?>">
+                            <a href="index.php?halaman=ubah_password_admin" class="sidebar-link">
+                                <i class="bi bi-lock"></i>
+                                <span>Ubah Password</span>
+                            </a>
+                        </li>
                         <li class="sidebar-title">Data</li>
                         <li class="sidebar-item <?= $dokter || $tambah_dokter || $ubah_dokter ? 'active' : '' ?>">
                             <a href="index.php?halaman=dokter" class="sidebar-link">
