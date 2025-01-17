@@ -4,6 +4,12 @@ include "./function/connection.php"; // Koneksi ke database
 // Query untuk mendapatkan data jadwal periksa yang aktif
 $jadwalQuery = mysqli_query($connection, "SELECT id, hari, jam_mulai, jam_selesai FROM jadwal_periksa WHERE status = 'Aktif'");
 
+// Cek apakah id_pasien sudah ada di session
+if (!isset($_SESSION['id_pasien'])) {
+    die("Anda belum login sebagai pasien.");
+}
+$id_pasien = $_SESSION['id_pasien'];
+
 ?>
 
 <div class="page-heading">
@@ -47,7 +53,7 @@ $jadwalQuery = mysqli_query($connection, "SELECT id, hari, jam_mulai, jam_selesa
                             SELECT dp.no_antrian, jp.hari, jp.jam_mulai, jp.jam_selesai, dp.keluhan
                             FROM daftar_poli dp
                             JOIN jadwal_periksa jp ON dp.id_jadwal = jp.id
-                            WHERE jp.status = 'Aktif' AND dp.status = '0'
+                            WHERE jp.status = 'Aktif' AND dp.status = '0' AND dp.id_pasien = '$id_pasien'
                         ");
                         $counter = 1;
                         while ($data = mysqli_fetch_assoc($periksaQuery)) :
