@@ -13,9 +13,9 @@ try {
     if (isset($_GET['id'])) {
         $id = htmlspecialchars($_GET['id']);
 
-        // Ambil data dokter beserta user terkait
+        // Ambil data pasien beserta user terkait
         $select = mysqli_query($connection, 
-            "SELECT pasien.*, user.username 
+            "SELECT pasien.*, user.username, user.foto
              FROM pasien 
              JOIN user ON pasien.user_id = user.id 
              WHERE pasien.id = '$id'");
@@ -26,7 +26,7 @@ try {
             exit();
         }
 
-        // Submit
+        // Submit form untuk update data
         if (isset($_POST['submit'])) {
             $nama = htmlspecialchars($_POST['nama']);
             $alamat = htmlspecialchars($_POST['alamat']);
@@ -38,18 +38,44 @@ try {
             mysqli_begin_transaction($connection);
 
             try {
-                // Update tabel user
-                $userId = $data['user_id']; // Ambil ID user dari dokter
+                // Update tabel user (username)
+                $userId = $data['user_id']; // Ambil ID user dari pasien
                 $updateUser = mysqli_query($connection, 
                     "UPDATE user SET username = '$username' WHERE id = '$userId'");
                 if (!$updateUser) {
                     throw new Exception("Gagal memperbarui username di tabel user.");
                 }
 
-                // Update tabel dokter
-                $updateDokter = mysqli_query($connection, 
+                // Menangani upload foto
+                $fotoBaru = $_FILES['foto']['name'];
+                $fotoTmp = $_FILES['foto']['tmp_name'];
+                $fotoError = $_FILES['foto']['error'];
+
+                if ($fotoError === UPLOAD_ERR_OK) {
+                    // Tentukan folder penyimpanan foto
+                    $fotoDestination = 'uploads/profiles/' . basename($fotoBaru);
+
+                    // Cek apakah foto sudah ada sebelumnya, jika ada hapus
+                    if (file_exists($data['foto'])) {
+                        unlink($data['foto']); // Hapus file foto lama
+                    }
+
+                    // Pindahkan file foto ke folder tujuan
+                    if (move_uploaded_file($fotoTmp, $fotoDestination)) {
+                        // Update foto di tabel user
+                        $updateFoto = mysqli_query($connection, "UPDATE user SET foto = '$fotoDestination' WHERE id = '$userId'");
+                        if (!$updateFoto) {
+                            throw new Exception("Gagal memperbarui foto user.");
+                        }
+                    } else {
+                        throw new Exception("Gagal mengunggah foto.");
+                    }
+                }
+
+                // Update tabel pasien
+                $updatePasien = mysqli_query($connection, 
                     "UPDATE pasien SET nama = '$nama', alamat = '$alamat', no_hp = '$no_hp', no_ktp = '$no_ktp' WHERE id = '$id'");
-                if (!$updateDokter) {
+                if (!$updatePasien) {
                     throw new Exception("Gagal memperbarui data pasien.");
                 }
 
@@ -136,9 +162,9 @@ try {
         <a href="index.php?halaman=pasien" class="btn btn-primary btn-sm mb-3">Kembali</a>
         <div class="card">
             <div class="card-body">
-                <form action="" method="post">
+                <form action="" method="post" enctype="multipart/form-data">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="username" placeholder="Masukan Username Dokter" name="username" value="<?= $data['username'] ?>" required>
+                        <input type="text" class="form-control" id="username" placeholder="Masukan Username Pasien" name="username" value="<?= $data['username'] ?>" required>
                         <label for="username">Username</label>
                     </div>
                     <div class="form-floating mb-3">
@@ -155,7 +181,12 @@ try {
                     </div>
                     <div class="form-floating mb-3">
                         <input type="number" class="form-control" id="no_ktp" placeholder="Masukan Nomor KTP Pasien" name="no_ktp" value="<?= $data['no_ktp'] ?>" required>
-                        <label for="no_hp">Nomor KTP</label>
+                        <label for="no_ktp">Nomor KTP</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="foto">Foto Profil</label><br>
+                        <img src="<?= $data['foto'] ?>" alt="Foto Profil" class="img-thumbnail" width="100"><br>
+                        <input type="file" name="foto" id="foto" class="form-control mt-2">
                     </div>
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary" name="submit">Submit</button>

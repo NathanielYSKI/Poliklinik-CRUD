@@ -9,6 +9,18 @@ if (isset($_GET['halaman'])) {
         case 'logout':
             include "page/logout.php";
             break;
+        case 'admin':
+            include "page/admin/view.php";
+            break;
+        case 'tambah_admin':
+            include "page/admin/add.php";
+            break;
+        case 'ubah_admin':
+            include "page/admin/edit.php";
+            break;
+        case 'hapus_admin':
+            include "page/admin/delete.php";
+            break;
         case 'dokter':
             include "page/dokter/view.php";
             break;

@@ -12,7 +12,7 @@ echo "
             timer: 2000,
             timerProgressBar: true,
         }).then(() => {
-            window.location.href = 'login.php';
+            window.location.href = 'dashboard.php';
         })
         </script>
         ";

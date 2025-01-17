@@ -3,28 +3,28 @@ include "./function/connection.php";
 
 // Query dengan INNER JOIN untuk mengambil data dokter termasuk username dan nama poli
 $query = mysqli_query($connection, "
-    SELECT p.id, p.nama, p.alamat, p.no_ktp, p.no_hp, p.no_rm, u.username 
-    FROM pasien p
-    INNER JOIN user u ON p.user_id = u.id WHERE p.status = '1'
+    SELECT a.id, a.nama, a.alamat, a.no_hp, u.username 
+    FROM admin a
+    INNER JOIN user u ON a.user_id = u.id WHERE a.status = '1'
 ");
 ?>
 <div class="page-heading">
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Data Pasien</h3>
+                <h3>Data Admin</h3>
                 <p class="text-subtitle text-muted">
-                    Halaman Tampil Data Pasien
+                    Halaman Tampil Data Admin
                 </p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a href="index.php?halaman=pasien">Pasien</a>
+                            <a href="index.php?halaman=pasien">Admin</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Lihat Data Pasien
+                            Lihat Data Admin
                         </li>
                     </ol>
                 </nav>
@@ -32,7 +32,7 @@ $query = mysqli_query($connection, "
         </div>
     </div>
     <section class="section">
-        <a href="index.php?halaman=tambah_pasien" class="btn btn-primary btn-sm mb-3">Tambah Pasien</a>
+        <a href="index.php?halaman=tambah_admin" class="btn btn-primary btn-sm mb-3">Tambah Admin</a>
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
@@ -43,9 +43,7 @@ $query = mysqli_query($connection, "
                                 <th>Username</th>
                                 <th>Nama</th>
                                 <th>Alamat</th>
-                                <th>Nomor KTP</th>
                                 <th>Nomor Handphone</th>
-                                <th>Nomor Rekam Medis</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -59,12 +57,10 @@ $query = mysqli_query($connection, "
                                         <td><?= $data['username'] ?></td>
                                         <td><?= $data['nama'] ?></td>
                                         <td><?= $data['alamat'] ?></td>
-                                        <td><?= $data['no_ktp'] ?></td>
                                         <td><?= $data['no_hp'] ?></td>
-                                        <td><?= $data['no_rm'] ?></td>
                                         <td>
-                                            <a class="btn btn-primary btn-sm" href="index.php?halaman=ubah_pasien&id=<?= $data['id'] ?>">Ubah</a>
-                                            <a class="btn btn-danger btn-sm" id="btn-hapus" href="index.php?halaman=hapus_pasien&id=<?= $data['id'] ?>" onclick="confirmModal(event)">Hapus</a>
+                                            <a class="btn btn-primary btn-sm" href="index.php?halaman=ubah_admin&id=<?= $data['id'] ?>">Ubah</a>
+                                            <a class="btn btn-danger btn-sm" id="btn-hapus" href="index.php?halaman=hapus_admin&id=<?= $data['id'] ?>" onclick="confirmModal(event)">Hapus</a>
                                         </td>
                                     </tr>
                                 <?php endwhile ?>

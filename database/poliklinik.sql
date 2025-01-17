@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 16 Jan 2025 pada 10.03
+-- Waktu pembuatan: 17 Jan 2025 pada 04.41
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -20,6 +20,28 @@ SET time_zone = "+00:00";
 --
 -- Database: `poliklinik`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `admin`
+--
+
+CREATE TABLE `admin` (
+  `id` int(11) NOT NULL,
+  `nama` varchar(255) NOT NULL,
+  `alamat` varchar(255) NOT NULL,
+  `no_hp` varchar(20) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `status` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `admin`
+--
+
+INSERT INTO `admin` (`id`, `nama`, `alamat`, `no_hp`, `user_id`, `status`) VALUES
+(1, 'Nathaniel', 'Jagalan no 88', '089509466544', 26, 1);
 
 -- --------------------------------------------------------
 
@@ -172,8 +194,11 @@ CREATE TABLE `pasien` (
 --
 
 INSERT INTO `pasien` (`id`, `nama`, `alamat`, `no_ktp`, `no_hp`, `no_rm`, `user_id`, `status`) VALUES
-(2, 'Ari', 'Hawa', 3374022354120002, '081978235633', 2147483647, 8, 1),
-(6, 'Evan', 'Arjuna No 1, Semarang', 3374022354120001, '89509466544', 2025010003, 18, 0);
+(2, 'Ari', 'Hawa', 3374022354120002, '081978235633', 2147483647, 8, 0),
+(6, 'Evan', 'Arjuna No 1, Semarang', 3374022354120001, '89509466544', 2025010003, 18, 0),
+(7, 'Aris', 'Arjuna No 1, Semarang', 3374022354120001, '089509466544', 2025010007, 23, 1),
+(8, 'Ivan', 'Arjuna No 3, Semarang', 3374022354120003, '089509466555', 2025010008, 24, 1),
+(9, 'Keti', 'Hawa', 3374022354120005, '08958436389', 2025010009, 27, 1);
 
 -- --------------------------------------------------------
 
@@ -244,17 +269,27 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `nama`, `username`, `password`, `role`, `foto`, `status`) VALUES
 (1, 'Nathan', 'Nathan', '$2y$10$5Kzv80J15Z/dElyjxyv2o.z0r2wVxiT2QurLwhXajy2RDtJlsiI0K', 'Admin', 'uploads/profiles/1.jpg', 1),
-(4, 'Elkaf', 'Elkaf', '$2y$10$oczl3oKjnNbhGJOuX1CA.OIQBY6UNYQ9Yuxu0frwVnTM1c5XdgjxK', 'Dokter', 'uploads/profiles/4.jpg', 1),
-(5, 'Budi', 'Budi', '$2y$10$uSW.QY2wRsS3I4LeFE0CLeifHCtLwaXNAwOGZujLA6vUsmjTcRwg.', 'Dokter', 'uploads/profiles/2.jpg', 1),
+(4, 'Elkaf', 'Elkaf', '$2y$10$oczl3oKjnNbhGJOuX1CA.OIQBY6UNYQ9Yuxu0frwVnTM1c5XdgjxK', 'Dokter', 'uploads/profiles/8.jpg', 1),
+(5, 'Budi', 'Budi', '$2y$10$8a4uB2fOup6.0CkjGKXRIufXNPJQM8Yd5Zsh4rLwU7XRR6Y9eW946', 'Dokter', 'uploads/profiles/2.jpg', 1),
 (6, 'Eva', 'Eva', '$2y$10$QDZ43cMDdZ9lJvBkle1.4O79tURtZ1L5SKIoPTCPLPifbyveOxn7m', 'Dokter', 'uploads/profiles/1.jpg', 1),
-(8, 'Ari', 'Ari', '$2y$10$8hz/9FpydQHgGfWcEjCTgeADJIMoiqHynKR6orIsMFgKbNBN6/6yO', 'Pasien', 'uploads/profiles/1.jpg', 1),
+(8, 'Ari', 'Ari', '$2y$10$tOsdNnuu3OvvIwCQXGa9tedWVZU490qU4/Sw6LMIJ4UPmxveUYxyW', 'Pasien', 'uploads/profiles/1.jpg', 0),
 (17, 'Andi', 'Andi', '$2y$10$rOKEwqUeljm5DvF7QmfLkOQ2CZz.947NGt1mBlZ5d/xehYUhBh5Lq', 'Dokter', 'uploads/profiles/1.jpg', 1),
 (18, 'Evan', 'evan', '$2y$10$0BYgt93JR10wqIXa6qrT8ua61oBZot6N7amYbiczvckG.GAaS0he2', 'Pasien', 'uploads/profiles/677cd41377fcd4.13482439.png', 0),
-(21, 'Edi', 'edi', '$2y$10$6P6fkMtwvQ3dNr/sWMMQl.D8ZTjusVltV6fRML.HRaqvm3sf.1bSS', 'Dokter', 'uploads/profiles/677cdac135f8b4.52363749.jpg', 0);
+(21, 'Edi', 'edi', '$2y$10$6P6fkMtwvQ3dNr/sWMMQl.D8ZTjusVltV6fRML.HRaqvm3sf.1bSS', 'Dokter', 'uploads/profiles/677cdac135f8b4.52363749.jpg', 0),
+(23, 'Aris', 'aris', '$2y$10$ez1Izf8VmwASpydv/cVrQO8VYn25sr.5G2CKSO1EnIW83WQZVJMo.', 'Pasien', 'uploads/profiles/8.jpg', 1),
+(24, 'Ivan', 'ivan', '$2y$10$CUyXB6cJ2W.fhqvznNFo8O/.ihWZlFF5SEJ8cUlCTduX/xNavK4KG', 'Pasien', 'uploads/profiles/6789c0b62a1510.65735770.jpg', 1),
+(26, 'Nathaniel', 'nathaniel', '$2y$10$etyCxfx9gkW/lIed9Kq3WuoaQ3aNLcEgawQ6jPJdFkypnP5cA1tZq', 'Admin', 'uploads/profiles/2.jpg', 1),
+(27, 'Keti', 'Keti', '$2y$10$Rq2rxs9cK55FXc3BFyTCN.zUr9FHcupT1mAKUXtsTsUACQKyNVVhG', 'Pasien', 'uploads/profiles/5.jpg', 1);
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indeks untuk tabel `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indeks untuk tabel `daftar_poli`
@@ -325,6 +360,12 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT untuk tabel `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT untuk tabel `daftar_poli`
 --
 ALTER TABLE `daftar_poli`
@@ -358,7 +399,7 @@ ALTER TABLE `obat`
 -- AUTO_INCREMENT untuk tabel `pasien`
 --
 ALTER TABLE `pasien`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `periksa`
@@ -376,7 +417,7 @@ ALTER TABLE `poli`
 -- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)

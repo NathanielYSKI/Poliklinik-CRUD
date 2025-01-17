@@ -35,7 +35,7 @@ try {
         if ($cekUser->num_rows > 0) {
             if (password_verify($password, $data['password'])) {
                 // Periksa apakah role user adalah Admin atau Dokter
-                if ($data['role'] === 'Admin' || $data['role'] === 'Dokter') {
+                if ($data['role'] === 'Pasien') {
                     // Set session umum
                     $_SESSION['nama'] = $data['nama'];
                     $_SESSION['role'] = $data['role'];
@@ -44,20 +44,12 @@ try {
                     $_SESSION["timeout"] = time() + (24 * 60 * 60);
         
                     // Cek jika role adalah dokter, tambahkan session id dokter
-                    if ($data['role'] === 'Dokter') {
+                    if ($data['role'] === 'Pasien') {
                         $userId = $data['id']; // Ambil user_id dari tabel user
-                        $cekDokter = mysqli_query($connection, "SELECT * FROM dokter WHERE user_id = '$userId'");
-                        $dokterData = mysqli_fetch_assoc($cekDokter);
-                        $_SESSION['id_dokter'] = $dokterData['id']; // Menyimpan id_dokter dalam session
+                        $cekPasien = mysqli_query($connection, "SELECT * FROM pasien WHERE user_id = '$userId'");
+                        $pasienData = mysqli_fetch_assoc($cekPasien);
+                        $_SESSION['id_pasien'] = $pasienData['id']; // Menyimpan id_dokter dalam session
                     }
-                    // Cek jika role adalah Admin, tambahkan session id admin
-                    elseif ($data['role'] === 'Admin') {
-                        $userId = $data['id']; // Ambil user_id dari tabel user
-                        $cekAdmin = mysqli_query($connection, "SELECT * FROM admin WHERE user_id = '$userId'");
-                        $adminData = mysqli_fetch_assoc($cekAdmin);
-                        $_SESSION['id_admin'] = $adminData['id']; // Menyimpan id_admin dalam session
-                    }
-
                     // Redirect jika login sukses
                     echo "
                     <script>
@@ -79,13 +71,13 @@ try {
                     <script>
                     Swal.fire({
                         title: 'Akses Ditolak',
-                        text: 'Hanya Admin dan Dokter yang dapat masuk.',
+                        text: 'Hanya Pasien yang dapat masuk.',
                         icon: 'error',
                         showConfirmButton: true,
                         timer: 2000,
                         timerProgressBar: true,
                     }).then(() => {
-                        window.location.href = 'login.php';
+                        window.location.href = 'login_pasien.php';
                     })
                     </script>
                     ";
@@ -101,7 +93,7 @@ try {
                     timer: 2000,
                     timerProgressBar: true,
                 }).then(() => {
-                    window.location.href = 'login.php';
+                    window.location.href = 'login_pasien.php';
                 })
                 </script>
                 ";
@@ -134,7 +126,7 @@ try {
             timer: 2000,
             timerProgressBar: true,
         }).then(() => {
-            window.location.href = 'login.php';
+            window.location.href = 'login_pasien.php';
         })
         </script>
         ";
@@ -171,6 +163,12 @@ try {
                             Masuk
                         </button>
                     </form>
+                    <div class="text-center mt-5 text-lg fs-4">
+                        <p class="text-gray-600">
+                            Belum punya akun?
+                            <a href="register.php" class="font-bold">Daftar</a>.
+                        </p>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-7 d-none d-lg-block">

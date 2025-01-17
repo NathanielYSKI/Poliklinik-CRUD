@@ -4,7 +4,7 @@ $now = time();
 session_start();
 
 if (!isset($_SESSION['nama'])) {
-    header('Location: login.php');
+    header('Location: dashboard.php');
 }
 
 if ($now > $_SESSION['timeout']) {

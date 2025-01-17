@@ -11,12 +11,12 @@ try {
 
         // Ambil data dokter beserta user ID
         $select = mysqli_query($connection, 
-            "SELECT user_id FROM pasien WHERE id = '$id'");
+            "SELECT user_id FROM admin WHERE id = '$id'");
         $data = mysqli_fetch_assoc($select);
 
         if (!$data) {
             // Jika data tidak ditemukan, kembalikan ke halaman dokter
-            header('Location: index.php?halaman=pasien');
+            header('Location: index.php?halaman=admin');
             exit();
         }
 
@@ -28,9 +28,9 @@ try {
         try {
             // Hapus data dokter
             $deleteDokter = mysqli_query($connection, 
-                "UPDATE pasien SET status = '0' WHERE id = '$id'");
+                "UPDATE admin SET status = '0' WHERE id = '$id'");
             if (!$deleteDokter) {
-                throw new Exception("Gagal menghapus data pasien.");
+                throw new Exception("Gagal menghapus data admin.");
             }
 
             // Hapus data user
@@ -43,7 +43,7 @@ try {
             // Commit transaksi jika semua berhasil
             mysqli_commit($connection);
 
-            $message = "Berhasil menghapus data pasien.";
+            $message = "Berhasil menghapus data admin.";
             echo "
             <script>
             Swal.fire({
@@ -54,7 +54,7 @@ try {
                 timer: 2000,
                 timerProgressBar: true,
             }).then(() => {
-                window.location.href = 'index.php?halaman=pasien';
+                window.location.href = 'index.php?halaman=admin';
             })
             </script>
             ";
@@ -73,7 +73,7 @@ try {
                 timer: 2000,
                 timerProgressBar: true,
             }).then(() => {
-                window.location.href = 'index.php?halaman=pasien';
+                window.location.href = 'index.php?halaman=admin';
             })
             </script>
             ";
@@ -92,7 +92,7 @@ try {
         timer: 2000,
         timerProgressBar: true,
     }).then(() => {
-        window.location.href = 'index.php?halaman=pasien';
+        window.location.href = 'index.php?halaman=admin';
     })
     </script>
     ";

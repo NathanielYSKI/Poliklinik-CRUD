@@ -6,22 +6,27 @@ try {
     $success = FALSE;
     $error = FALSE;
 
-    // Ambil `id` dari session
-    $id = $_SESSION['id'];
+    // Ambil `id_pasien` dari session
+    $id = $_SESSION['id_admin'];
 
-    // Ambil data user terkait
+    // Ambil data dokter beserta user terkait
     $select = mysqli_query($connection, 
-        "SELECT * FROM user WHERE id = '$id'");
+        "SELECT admin.*, user.username, user.foto 
+         FROM admin 
+         JOIN user ON admin.user_id = user.id 
+         WHERE admin.id = '$id'");
     $data = mysqli_fetch_assoc($select);
 
     if (!$data) {
-        header('Location: index.php?halaman=pasien');
+        header('Location: index.php?halaman=admin');
         exit();
     }
 
-    // Submit form
+    // Submit
     if (isset($_POST['submit'])) {
         $nama = htmlspecialchars($_POST['nama']);
+        $alamat = htmlspecialchars($_POST['alamat']);
+        $no_hp = htmlspecialchars($_POST['no_hp']);
         $username = htmlspecialchars($_POST['username']);
 
         // Menangani file upload foto profil
@@ -33,11 +38,12 @@ try {
         mysqli_begin_transaction($connection);
 
         try {
-            // Update tabel user untuk username dan nama
+            // Update tabel user
+            $userId = $data['user_id']; // Ambil ID user dari dokter
             $updateUser = mysqli_query($connection, 
-                "UPDATE user SET username = '$username', nama = '$nama' WHERE id = '$id'");
+                "UPDATE user SET username = '$username' WHERE id = '$userId'");
             if (!$updateUser) {
-                throw new Exception("Gagal memperbarui username atau nama.");
+                throw new Exception("Gagal memperbarui username di tabel user.");
             }
 
             // Jika ada foto baru, proses upload
@@ -48,19 +54,26 @@ try {
                 // Pindahkan file ke folder tujuan
                 if (move_uploaded_file($fotoTmp, $fotoDestination)) {
                     // Update foto di tabel user
-                    $updateFoto = mysqli_query($connection, "UPDATE user SET foto = '$fotoDestination' WHERE id = '$id'");
+                    $updateFoto = mysqli_query($connection, "UPDATE user SET foto = '$fotoDestination' WHERE id = '$userId'");
 
                     if (!$updateFoto) {
-                        throw new Exception("Gagal memperbarui foto profil.");
+                        throw new Exception("Gagal memperbarui foto user.");
                     }
                 } else {
                     throw new Exception("Gagal mengunggah foto.");
                 }
             }
 
+            // Update tabel pasien
+            $updatePasien = mysqli_query($connection, 
+                "UPDATE admin SET nama = '$nama', alamat = '$alamat', no_hp = '$no_hp' WHERE id = '$id'");
+            if (!$updatePasien) {
+                throw new Exception("Gagal memperbarui data pasien.");
+            }
+
             // Commit transaksi jika semua berhasil
             mysqli_commit($connection);
-            $message = "Berhasil mengubah data.";
+            $message = "Berhasil mengubah data";
             echo "
             <script>
             Swal.fire({
@@ -119,14 +132,14 @@ try {
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Data <?= $data['nama'] ?></h3>
                 <p class="text-subtitle text-muted">
-                    Halaman Ubah Data Anda
+                    Halaman Ubah Data <?= $data['nama'] ?>
                 </p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active" aria-current="page">
-                            Ubah Data
+                            Ubah Data Admin
                         </li>
                     </ol>
                 </nav>
@@ -138,12 +151,20 @@ try {
             <div class="card-body">
                 <form action="" method="post" enctype="multipart/form-data">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="username" placeholder="Masukan Username" name="username" value="<?= $data['username'] ?>" required>
+                        <input type="text" class="form-control" id="username" placeholder="Masukan Username Admin" name="username" value="<?= $data['username'] ?>" required>
                         <label for="username">Username</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="nama" placeholder="Masukan Nama Anda" name="nama" value="<?= $data['nama'] ?>" required>
-                        <label for="nama">Nama</label>
+                        <input type="text" class="form-control" id="nama" placeholder="Masukan Nama Admin" name="nama" value="<?= $data['nama'] ?>" required>
+                        <label for="nama">Nama Admin</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="alamat" placeholder="Masukan Alamat Admin" name="alamat" value="<?= $data['alamat'] ?>" required>
+                        <label for="alamat">Alamat</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="no_hp" placeholder="Masukan Nomor Handphone Admin" name="no_hp" value="<?= $data['no_hp'] ?>" required>
+                        <label for="no_hp">Nomor Handphone</label>
                     </div>
                     <div class="mb-3">
                         <label for="foto">Foto Profil</label><br>

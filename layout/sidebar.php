@@ -31,6 +31,15 @@ if (isset($_GET['halaman'])) {
         case 'beranda':
             $beranda = true;
             break;
+        case 'admin':
+            $admin = true;
+            break;
+        case 'tambah_admin':
+            $tambah_admin = true;
+            break;
+        case 'ubah_admin':
+            $ubah_admin = true;
+            break;
         case 'dokter':
             $dokter = true;
             break;
@@ -123,7 +132,7 @@ if (isset($_GET['halaman'])) {
             $dokter = false;
             $pasien = false;
             $tambah_poli = false;
-            $ubah_foli = false;
+            $ubah_poli = false;
             $tambah_dokter = false;
             $ubah_dokter = false;
     }
@@ -132,7 +141,7 @@ if (isset($_GET['halaman'])) {
     $dokter = false;
     $pasien = false;
     $tambah_poli = false;
-    $ubah_foli = false;
+    $ubah_poli = false;
     $tambah_dokter = false;
     $ubah_dokter = false;
 }
@@ -230,6 +239,12 @@ if (isset($_GET['halaman'])) {
                             </a>
                         </li>
                         <li class="sidebar-title">Data</li>
+                        <li class="sidebar-item <?= $admin || $tambah_admin || $ubah_admin ? 'active' : '' ?>">
+                            <a href="index.php?halaman=admin" class="sidebar-link">
+                                <i class="bi bi-person-lines-fill"></i>
+                                <span>Admin</span>
+                            </a>
+                        </li>
                         <li class="sidebar-item <?= $dokter || $tambah_dokter || $ubah_dokter ? 'active' : '' ?>">
                             <a href="index.php?halaman=dokter" class="sidebar-link">
                                 <i class="bi bi-person-workspace"></i>
